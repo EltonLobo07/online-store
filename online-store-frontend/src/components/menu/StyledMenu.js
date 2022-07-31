@@ -8,7 +8,7 @@ const StyledMenu = styled.div`
     > a 
     {
         text-decoration: none;
-        color: black;
+        color: white;
     }
 `;
 
