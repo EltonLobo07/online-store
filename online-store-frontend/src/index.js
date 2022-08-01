@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
-import Products from "./components/products/Products";
-import Checkout from "./components/checkout/Checkout";
-import Home from "./components/home/Home";
+import Products from "./components/Products";
+import Checkout from "./components/Checkout";
+import Home from "./components/Home";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import StyledButton from "../button/StyledButton";
+import StyledButton from "./Button";
 import styled from "styled-components";
 
 const StyledProduct = styled.div`

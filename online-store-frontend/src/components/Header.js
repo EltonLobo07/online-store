@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Menu from "../menu/Menu";
+import Menu from "./Menu";
 
 const horizontalPadding = "20px";
 const gridChildMinWidth = "280px";

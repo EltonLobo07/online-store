@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Product from "../product/Product";
+import Product from "./Product";
 import styled from "styled-components";
 
 const StyledProducts = styled.div`
