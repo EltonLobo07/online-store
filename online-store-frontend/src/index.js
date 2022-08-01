@@ -5,6 +5,8 @@ import App from "./App";
 import Products from "./components/Products";
 import Checkout from "./components/Checkout";
 import Home from "./components/Home";
+import LogIn from "./components/LogIn";
+import SignUp from "./components/SignUp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,6 +17,8 @@ root.render(
                 <Route path = "products" element = {<Products />}></Route>
                 <Route path = "checkout" element = {<Checkout />}></Route>
             </Route>
+            <Route path = "login" element = {<LogIn />}></Route>
+            <Route path = "signup" element = {<SignUp />}></Route>
         </Routes>
     </BrowserRouter>
 );
