@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom"; 
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const StyledMenu = styled.div`
     display: flex;
@@ -13,15 +14,30 @@ const StyledMenu = styled.div`
     }
 `;
 
-function Menu() {
+function Menu({ user, setUser }) {
+    const navigate = useNavigate();
+
+    function handleClick() {
+        window.localStorage.removeItem("user");
+        setUser(null);
+        navigate("/");
+    };
+
     return (
         <StyledMenu>
             <Link to = "/">Home</Link>
             <Link to = "/products">Products</Link>
             <Link to = "/checkout">Checkout</Link>
-            <div>Logo</div>
+
+            {user ? <button onClick = {handleClick}>{user.email.substring(0, user.email.indexOf("@"))}</button> :
+                    <Link to = "/login">LogIn</Link>}
         </StyledMenu>
     );
+};
+
+Menu.propTypes = {
+    user: PropTypes.object,
+    setUser: PropTypes.func.isRequired
 };
 
 export default Menu;

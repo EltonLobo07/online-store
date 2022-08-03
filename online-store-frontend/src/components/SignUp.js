@@ -2,17 +2,22 @@ import FormContainer from "./FormContainer";
 import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
 import { useState } from "react";
+import axios from "axios";
 
 function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        // Code here
-
-        console.log(email, password);
+        try {
+            await axios.post("/api/users", {email, password});
+            alert("User created");
+        }
+        catch (err) {
+            alert(err?.response?.data?.error || "Please try again");
+        }
 
         setEmail("");
         setPassword("");

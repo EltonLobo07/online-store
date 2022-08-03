@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
 
         const token = jwt.sign({email}, SECRET_KEY);
 
-        res.json({token});
+        res.json({token, email});
     }
     catch(err) {
         next(err);

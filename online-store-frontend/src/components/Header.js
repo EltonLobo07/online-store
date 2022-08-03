@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Menu from "./Menu";
+import PropTypes from "prop-types";
 
 const horizontalPadding = "20px";
 const gridChildMinWidth = "280px";
@@ -41,15 +42,20 @@ const StyledHeader = styled.div`
     } 
 `;
 
-function Header() {
+function Header({ user, setUser }) {
     return (
         <StyledHeader>
             <div>
                 <div>Fake Store</div>
-                <Menu />
+                <Menu user = {user} setUser = {setUser} />
             </div>
         </StyledHeader>
     );
+};
+
+Header.propTypes = {
+    user: PropTypes.object,
+    setUser: PropTypes.func.isRequired
 };
 
 export default Header;

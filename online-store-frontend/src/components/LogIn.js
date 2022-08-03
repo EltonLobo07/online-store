@@ -2,17 +2,25 @@ import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
 import FormContainer from "./FormContainer";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LogIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        // Code here
-
-        console.log(email, password);
+        try {
+            const response = await axios.post("/api/login", {email, password});
+            window.localStorage.setItem("user", JSON.stringify(response.data));
+            navigate("/", {replace: true});
+        }
+        catch (err) {
+            alert(err?.response?.data?.error || "Please try again");
+        }
 
         setEmail("");
         setPassword("");
