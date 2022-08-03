@@ -4,7 +4,7 @@ const loginRouter = require("./controllers/login");
 const logger = require("./utils/logger");
 const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
-const { unknownEndpointMiddleware, errorHandlingMiddleware } = require("./utils/middlewares");
+const { unknownEndpointMiddleware, errorHandlingMiddleware, requestLoggerMiddleware } = require("./utils/middlewares");
 
 // Connect to your DB here
 mongoose.connect(DB_URI)
@@ -14,6 +14,8 @@ mongoose.connect(DB_URI)
 const app = express();
 
 app.use(express.json()); // Sets request's body field to received JS object
+
+app.use(requestLoggerMiddleware);
 
 app.use("/api/users", userRouter);
 
