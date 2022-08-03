@@ -1,5 +1,6 @@
 const express = require("express");
 const userRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 const logger = require("./utils/logger");
 const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
@@ -15,6 +16,8 @@ const app = express();
 app.use(express.json()); // Sets request's body field to received JS object
 
 app.use("/api/users", userRouter);
+
+app.use("/api/login", loginRouter);
 
 app.use(unknownEndpointMiddleware);
 
