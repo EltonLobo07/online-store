@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String
+    },
+    shoppingCartItems: {
+        type: [Number]
     }
 });
 

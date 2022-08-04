@@ -29,7 +29,9 @@ function Menu({ user, setUser }) {
             <Link to = "/products">Products</Link>
             <Link to = "/checkout">Checkout</Link>
 
-            {user ? <button onClick = {handleClick}>{user.email.substring(0, user.email.indexOf("@"))}</button> :
+            {user ? <button onClick = {handleClick}>
+                        {`${user.email.substring(0, user.email.indexOf("@"))} (${user.shoppingCartItems.length})`}
+                    </button> :
                     <Link to = "/login">LogIn</Link>}
         </StyledMenu>
     );

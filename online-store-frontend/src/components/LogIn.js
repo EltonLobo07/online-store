@@ -19,7 +19,7 @@ function LogIn() {
             navigate("/", {replace: true});
         }
         catch (err) {
-            alert(err?.response?.data?.error || "Please try again");
+            alert(err?.response?.data?.error || err.message);
         }
 
         setEmail("");

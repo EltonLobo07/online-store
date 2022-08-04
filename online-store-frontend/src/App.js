@@ -16,7 +16,7 @@ function App() {
     return (
         <MainContainer>
             <Header user = {user} setUser = {setUser} />
-            <Outlet />
+            <Outlet context = {[user, setUser]} />
             <Footer />
         </MainContainer>
     );

@@ -353,6 +353,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: monospace;
 }
 
 html, body, #root {

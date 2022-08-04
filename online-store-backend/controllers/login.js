@@ -11,19 +11,21 @@ router.post("/", async (req, res, next) => {
         return res.status(400).json({error: "'email' or 'password' field missing in the request body."});
 
     try {
-        const exisitingUser = await User.find({email});
+        const userArray = await User.find({email});
         
-        if (exisitingUser.length == 0) 
+        if (userArray.length == 0) 
             return res.status(401).json({error: "The provided email is not present in the database"});
 
-        const isPasswordMatching = await bcrypt.compare(password, exisitingUser[0].passwordHash);
+        const user = userArray[0];
+
+        const isPasswordMatching = await bcrypt.compare(password, user.passwordHash);
 
         if (!isPasswordMatching)
             return res.status(401).json({error: "Provided password is incorrect"});
 
         const token = jwt.sign({email}, SECRET_KEY);
 
-        res.json({token, email});
+        res.json({token, email, shoppingCartItems: user.shoppingCartItems});
     }
     catch(err) {
         next(err);

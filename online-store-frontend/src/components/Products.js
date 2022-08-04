@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Product from "./Product";
 import styled from "styled-components";
+import { useOutletContext } from "react-router-dom";
 
 const StyledProducts = styled.div`
     // To center the header on viewport with large width 
@@ -23,6 +24,7 @@ const StyledProducts = styled.div`
 
 function Products() {
     const [products, setProducts] = useState([]);
+    const [user, setUser] = useOutletContext();
 
     useEffect(() => {
         axios.get("https://fakestoreapi.com/products")
@@ -33,7 +35,10 @@ function Products() {
     return (
         <StyledProducts>
             <div>
-                {products.map(product => <Product key = {product.id} product = {product} />)}
+                {products.map(product => <Product key = {product.id} 
+                                                  product = {product}
+                                                  user = {user}
+                                                  setUser = {setUser} />)}
             </div>
         </StyledProducts>
     );

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import StyledButton from "./Button";
 import styled from "styled-components";
+import axios from "axios";
 
 const StyledProduct = styled.div`
     height: 300px;
@@ -31,7 +32,25 @@ const StyledProduct = styled.div`
     }
 `;
 
-function Product({ product }) {
+function Product({ user, setUser, product }) {
+    async function handleClick() {
+        if (user) {
+            try {
+                const response = await axios.put(`/api/users/addItem`,
+                                                 {productId: product.id}, 
+                                                 {headers: {authorization: `Bearer ${user.token}`}});
+                
+                if (response.status === 200)
+                    alert("This product is already added");
+                else
+                    setUser({...user, shoppingCartItems: user.shoppingCartItems.concat(product.id)});
+            }
+            catch(err) {
+                alert(err?.response?.data?.error || err.message);
+            }
+        }
+    };
+
     return (
         <StyledProduct>
             <div>
@@ -39,13 +58,15 @@ function Product({ product }) {
             </div>
             <div style = {{fontWeight: 600}}>{product.title}</div>
             <div>${product.price}</div>
-            <StyledButton>Add to cart</StyledButton>
+            <StyledButton onClick = {handleClick}>Add to cart</StyledButton>
         </StyledProduct>
     );
 };
 
 Product.propTypes = {
-    product: PropTypes.object.isRequired
+    product: PropTypes.object.isRequired,
+    user: PropTypes.object,
+    setUser: PropTypes.func.isRequired
 };
 
 export default Product;

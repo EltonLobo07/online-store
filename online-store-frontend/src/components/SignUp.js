@@ -3,10 +3,12 @@ import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -14,9 +16,10 @@ function SignUp() {
         try {
             await axios.post("/api/users", {email, password});
             alert("User created");
+            navigate("/login");
         }
         catch (err) {
-            alert(err?.response?.data?.error || "Please try again");
+            alert(err?.response?.data?.error || err.message);
         }
 
         setEmail("");
