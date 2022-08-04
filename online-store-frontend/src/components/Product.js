@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import StyledButton from "./Button";
 import styled from "styled-components";
-import axios from "axios";
+import userService from "../services/users";
 
 const StyledProduct = styled.div`
     height: 300px;
@@ -36,11 +36,9 @@ function Product({ user, setUser, product }) {
     async function handleClick() {
         if (user) {
             try {
-                const response = await axios.put(`/api/users/addItem`,
-                                                 {productId: product.id}, 
-                                                 {headers: {authorization: `Bearer ${user.token}`}});
+                const responseStatusCode = await userService.addItem({productId: product.id}, user.token);
                 
-                if (response.status === 200)
+                if (responseStatusCode === 200)
                     alert("This product is already added");
                 else
                     setUser({...user, shoppingCartItems: user.shoppingCartItems.concat(product.id)});

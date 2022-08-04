@@ -2,8 +2,8 @@ import FormContainer from "./FormContainer";
 import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import userService from "../services/users";
 
 function SignUp() {
     const [email, setEmail] = useState("");
@@ -14,7 +14,11 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            await axios.post("/api/users", {email, password});
+            await userService.createUser({email, password});
+
+            // Why use "await" keyword here? Maybe read the below stackoverflow question and answers
+            // https://stackoverflow.com/questions/56895695/why-do-i-need-to-await-an-async-function-when-it-is-not-supposedly-returning-a-p#:~:text=Async%2Fawait%20does%20not%20do,how%20the%20async%20function%20works.
+            
             alert("User created");
             navigate("/login");
         }
