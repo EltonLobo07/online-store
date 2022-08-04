@@ -3,18 +3,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../utils/config");
-
-function getToken(req) {
-    const authorization = req.get("Authorization"); // Case insensitive match
-
-    if (authorization && authorization.toLowerCase().startsWith("bearer"))
-    {
-        const token = authorization.slice(7);
-        return token;
-    }
-
-    return null;
-};
+const { getUserIfAuthorizedMiddleware } = require("../utils/middlewares");
+const axios = require("axios");
 
 router.post("/", async (req, res, next) => {
     const { email, password } = req.body;
@@ -40,28 +30,14 @@ router.post("/", async (req, res, next) => {
     }
 });
 
-router.put("/addItem", async (req, res, next) => {
-    const token = getToken(req);
-
-    if (token === null)
-        return res.status(401).json({error: "Missing token which should be passed through 'Authorization' header field of the request object"});
-    
-    let decodedToken;
-
-    try {
-        decodedToken = jwt.verify(token, SECRET_KEY);    
-    }
-    catch(err) {
-        next(err);
-    } 
-
+router.put("/shoppingCartItems", getUserIfAuthorizedMiddleware, async (req, res, next) => {
     const { productId } = req.body;
 
     if (productId === undefined)
         return res.status(400).json({error: "'productId' field missing"});
 
     try {
-        const userArray = await User.find({email: decodedToken.email});
+        const userArray = await User.find({email: req.decodedLoginObj.email});
 
         if (userArray.length == 0)
             return res.status(400).json({error: "The provided email is not present in the database"});
@@ -74,6 +50,31 @@ router.put("/addItem", async (req, res, next) => {
         user.shoppingCartItems.push(productId);
         await user.save();
         res.status(201).end();
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
+router.get("/shoppingCartItems", getUserIfAuthorizedMiddleware, async (req, res, next) => {
+    try {
+        const userArray = await User.find({email: req.decodedLoginObj.email});
+
+        if (userArray.length === 0)
+            return res.status(401).json({error: "The provided email didn't match any user from the database"});
+        
+        const user = userArray[0];
+
+        const shoppingCartItems = [];
+
+        for (let i = 0; i < user.shoppingCartItems.length; i++)
+        {
+            const response = await axios.get(`https://fakestoreapi.com/products/${user.shoppingCartItems[i]}`);
+            const item = response.data;
+            shoppingCartItems.push(item);
+        }
+
+        res.json(shoppingCartItems);
     }
     catch(err) {
         next(err);

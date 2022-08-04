@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const baseUrl = "/api/login";
 
@@ -7,4 +7,6 @@ async function login(reqBody) {
     return response.data;
 };
 
-module.exports = {login};
+const exposedObj = {login};
+
+export default exposedObj;
