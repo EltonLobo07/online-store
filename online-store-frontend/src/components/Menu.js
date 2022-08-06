@@ -30,7 +30,7 @@ function Menu({ user, setUser }) {
             <Link to = "/checkout">Checkout</Link>
 
             {user ? <button onClick = {handleClick}>
-                        {`${user.email.substring(0, user.email.indexOf("@"))} (${user.shoppingCartItems.length})`}
+                        {`${user.id} (${user.shoppingCartItems.length})`}
                     </button> :
                     <Link to = "/login">LogIn</Link>}
         </StyledMenu>

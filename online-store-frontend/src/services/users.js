@@ -7,16 +7,21 @@ async function createUser(reqBody) {
     return response.data;
 };
 
-async function addItemToShoppingCart(reqBody, token) {
-    const response = await axios.put(`${baseUrl}/shoppingCartItems`, reqBody, {headers: {Authorization: `Bearer ${token}`}});
+async function addItemToShoppingCart(reqBody, userId, token) {
+    const response = await axios.post(`${baseUrl}/${userId}/shoppingCartItems`, reqBody, {headers: {Authorization: `Bearer ${token}`}});
     return response.status;
 };
 
-async function getShoppingCartItems(token) {
-    const response = await axios.get(`${baseUrl}/shoppingCartItems`, {headers: {Authorization: `Bearer ${token}`}});
+async function getShoppingCartItems(userId, token) {
+    const response = await axios.get(`${baseUrl}/${userId}/shoppingCartItems`, {headers: {Authorization: `Bearer ${token}`}});
     return response.data;
-}
+};
 
-const exposedObj = {createUser, addItemToShoppingCart, getShoppingCartItems};
+async function removeShoppingCartItem(itemID, userId, token) {
+    const response = await axios.delete(`${baseUrl}/${userId}/shoppingCartItems/${itemID}`, {headers: {Authorization: `Bearer ${token}`}});
+    return response.status;
+};
+
+const exposedObj = {createUser, addItemToShoppingCart, getShoppingCartItems, removeShoppingCartItem};
 
 export default exposedObj;

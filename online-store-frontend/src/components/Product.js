@@ -36,17 +36,16 @@ function Product({ user, setUser, product }) {
     async function handleClick() {
         if (user) {
             try {
-                const responseStatusCode = await userService.addItemToShoppingCart({productId: product.id}, user.token);
+                const responseStatusCode = await userService.addItemToShoppingCart({productId: product.id}, user.id, user.token);
                 
-                if (responseStatusCode === 200)
-                    alert("This product is already added");
-                else
+                if (responseStatusCode === 201)
                 {
-                    setUser({...user, shoppingCartItems: user.shoppingCartItems.concat(product.id)});
-                    const userInfo = JSON.parse(window.localStorage.getItem("user"));
-                    userInfo.shoppingCartItems.push(product.id);
-                    window.localStorage.setItem("user", JSON.stringify(userInfo));
+                    const userCopy = {...user, shoppingCartItems: user.shoppingCartItems.concat(product.id)};
+                    window.localStorage.setItem("user", JSON.stringify(userCopy)); 
+                    setUser(userCopy);
                 }
+                else
+                    alert("This product is already added");
             }
             catch(err) {
                 alert(err?.response?.data?.error || err.message);

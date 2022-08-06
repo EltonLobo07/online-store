@@ -7,9 +7,10 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String
     },
-    shoppingCartItems: {
-        type: [Number]
-    }
+    shoppingCartItems: [{
+        type: mongoose.Types.ObjectId, 
+        ref: "Product" 
+    }]
 });
 
 userSchema.set("toJSON", {

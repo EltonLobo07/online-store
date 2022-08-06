@@ -23,9 +23,9 @@ router.post("/", async (req, res, next) => {
         if (!isPasswordMatching)
             return res.status(401).json({error: "Provided password is incorrect"});
 
-        const token = jwt.sign({email}, SECRET_KEY);
+        const token = jwt.sign({email, id: String(user._id)}, SECRET_KEY);
 
-        res.json({token, email, shoppingCartItems: user.shoppingCartItems});
+        res.json({token, id: String(user._id), shoppingCartItems: user.shoppingCartItems});
     }
     catch(err) {
         next(err);

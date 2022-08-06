@@ -24,7 +24,7 @@ const StyledCheckout = styled.div`
 
 function Checkout() {
     const [items, setItems] = useState([]);
-    const [user] = useOutletContext();
+    const [user, setUser] = useOutletContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,7 +35,7 @@ function Checkout() {
                 return item;
             }
 
-            userService.getShoppingCartItems(user.token)
+            userService.getShoppingCartItems(user.id, user.token)
                        .then(items => items.map(item => addQuantityFieldInPlace(item)))
                        .then(checkoutItems => setItems(checkoutItems))
                        .catch(err => alert(err?.response?.data?.error || err.message));
@@ -58,7 +58,7 @@ function Checkout() {
     return (
         <StyledCheckout>
             <div>
-                {items.map(item => <ShoppingCartItem key = {item.id} item = {item}></ShoppingCartItem>)}
+                {items.map(item => <ShoppingCartItem key = {item.id} item = {item} user = {user} setUser = {setUser}></ShoppingCartItem>)}
             </div>
         </StyledCheckout>
     );

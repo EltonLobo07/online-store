@@ -38,6 +38,13 @@ function getUserIfAuthorizedMiddleware(req, res, next) {
     }
 };
 
+function idMatchMiddleware(req, res, next) {
+    if (req.params.userId && req.params.userId !== req.decodedLoginObj.id)
+        return res.status(402).json({error: "Users can only access their own shopping cart"});
+
+    next();
+};
 
 module.exports = {unknownEndpointMiddleware, errorHandlingMiddleware,
-                  requestLoggerMiddleware, getUserIfAuthorizedMiddleware};
+                  requestLoggerMiddleware, getUserIfAuthorizedMiddleware,
+                  idMatchMiddleware};

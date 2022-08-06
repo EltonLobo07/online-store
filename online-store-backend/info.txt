@@ -1,0 +1,78 @@
+ROUTE HTTP_METHOD
+	INPUT
+
+	OUTPUT
+
+	DESCRIPTION
+------------------------------------------------------------
+LOGIN
+------------------------------------------------------------
+/api/login POST
+	body: {email: "example@gmail.com", password: "somePassword"}
+
+	{token, id, shoppingCartItems}
+	token: Encoded, main content = {email, id}
+
+	The email should be registered with the store app before login 
+------------------------------------------------------------
+USER
+------------------------------------------------------------
+/api/users POST
+	body: {email: "example@gmail.com", password: "somePassword"}
+
+	{id, email, shoppingCartItems}
+
+	People can signup using this route
+------------------------------------------------------------
+/api/users/userId/shoppingCartItems POST
+	
+	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-body: {productId}
+
+	No output, only status code returned
+		200 - If already present in the shopping cart
+		201 - If added to the user's shopping cart
+
+	Allows users to add an item to their shopping cart
+------------------------------------------------------------
+/api/users/userId/shoppingCartItems GET
+
+	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+
+	Array of 'Product' objects
+
+	Allows users to get details of every product in their shopping cart
+------------------------------------------------------------
+/api/users/userId/shoppingCartItems/itemId DELETE
+
+	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+
+	'User' object
+
+	Allows users to remove an item from their shopping cart
+------------------------------------------------------------
+PRODUCTS
+------------------------------------------------------------
+/api/products POST
+	
+	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+
+	New 'Product' object
+
+	Only admin of the website (email === "admin@company.com") can add a new product to the list of products
+------------------------------------------------------------
+/api/products GET
+	
+	NONE
+
+	Array of 'Product' objects
+
+	Returns all of the available products in the store
+------------------------------------------------------------
+/api/products/productId GET
+
+	NONE
+
+	'Product' object
+
+	Returns a product whose Id matches with the provided productId in the URL
