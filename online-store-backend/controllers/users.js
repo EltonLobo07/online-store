@@ -84,4 +84,20 @@ router.delete("/:userId/shoppingCartItems/:itemId", getUserIfAuthorizedMiddlewar
     }
 });
 
+router.patch("/:userId/shoppingCartItems/", getUserIfAuthorizedMiddleware, idMatchMiddleware, async (req, res, next) => {
+    try {
+        const user = await User.findOne({email: req.decodedLoginObj.email});
+
+        if (user === null)
+            return res.status(401).json({error: "The provided email didn't match any user from the database"});
+
+        user.shoppingCartItems = [];
+        await user.save();
+        res.status(200).end();
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
 module.exports = router;

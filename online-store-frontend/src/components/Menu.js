@@ -19,7 +19,7 @@ function Menu({ user, setUser }) {
 
     function handleClick() {
         window.localStorage.removeItem("user");
-        setUser(null);
+        setUser(undefined);
         navigate("/");
     };
 

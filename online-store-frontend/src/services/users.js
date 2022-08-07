@@ -22,6 +22,13 @@ async function removeShoppingCartItem(itemID, userId, token) {
     return response.status;
 };
 
-const exposedObj = {createUser, addItemToShoppingCart, getShoppingCartItems, removeShoppingCartItem};
+async function resetShoppingCart(token, userId) {
+    const response = await axios.patch(`${baseUrl}/${userId}/shoppingCartItems`, null, {headers: {Authorization: `Bearer ${token}`}});
+    return response.status;
+}
+
+const exposedObj = {createUser, addItemToShoppingCart, 
+                    getShoppingCartItems, removeShoppingCartItem,
+                    resetShoppingCart};
 
 export default exposedObj;

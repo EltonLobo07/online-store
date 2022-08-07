@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const productRouter = require("./controllers/products");
+const orderRouter = require("./controllers/orders");
 const logger = require("./utils/logger");
 const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
@@ -23,6 +24,8 @@ app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 
 app.use("/api/products", productRouter);
+
+app.use("/api/orders", orderRouter);
 
 app.use(unknownEndpointMiddleware);
 
