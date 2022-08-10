@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
+const { getMissingFieldString } = require("../utils/helpers");
 
 const categorySchema = new mongoose.Schema({
-    name: String
+    name: {
+        type: String,
+        required: [true, getMissingFieldString("category")]
+    }
 });
 
 categorySchema.set("toJSON", {

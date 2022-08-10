@@ -23,7 +23,7 @@ async function removeShoppingCartItem(itemID, userId, token) {
 };
 
 async function resetShoppingCart(token, userId) {
-    const response = await axios.patch(`${baseUrl}/${userId}/shoppingCartItems`, null, {headers: {Authorization: `Bearer ${token}`}});
+    const response = await axios.delete(`${baseUrl}/${userId}/shoppingCartItems`, {headers: {Authorization: `Bearer ${token}`}});
     return response.status;
 }
 

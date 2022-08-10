@@ -1,25 +1,54 @@
 const Product = require("../models/product");
 const Category = require("../models/category");
-const { getUserIfAuthorizedMiddleware } = require("../utils/middlewares");
+const { getUserIfAuthorized, adminCheck } = require("../utils/middlewares");
+const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
 const router = require("express").Router();
 
-router.post("/", getUserIfAuthorizedMiddleware, async (req, res, next) => {
+router.post("/", getUserIfAuthorized, adminCheck, async (req, res, next) => {
     try {
-        if (req.decodedLoginObj.email !== "admin@company.com")
-            return res.status(401).json({error: "This route is only for the admin"});
+        if (req.body.category === undefined)
+            return res.status(400).json(getErrorMsgObj(getMissingFieldString("category")));
 
-        const category = await Category.findOne({name: req.body.category}); 
+        const productCategory = req.body.category.toLowerCase();
+        const category = await Category.findOne({name: productCategory}); 
 
         if (category === null)
         {
-            const newCategory = new Category({name: req.body.category});
+            const newCategory = new Category({name: productCategory});
             const savedNewCategory = await newCategory.save();
-            req.body.category = savedNewCategory.id;
+
+            req.body.category = savedNewCategory._id;
         }
         else
-            req.body.category = category.id;
+            req.body.category = category._id;
 
-        const product = new Product(req.body);
+        const newProduct = req.body;
+
+        let newProductRatingRate = Number(newProduct.rating?.rate);
+        // 0 <= newProductRatingRate <= 5
+        newProductRatingRate = Math.max(Math.min(isNaN(newProductRatingRate) ? 0 : newProductRatingRate, 5), 0);
+
+        let newProductRatingCount = Number(newProduct.rating?.count);
+        // 0 <= newProductRatingCount
+        newProductRatingCount = Math.max(isNaN(newProductRatingCount) ? 0 : newProductRatingCount, 0);
+
+        if (newProductRatingRate > 0) {
+            // If newProductRatingRate > 0, then newProductRatingCount >= 1
+            newProductRatingCount = Math.max(newProductRatingCount, 1);
+        }
+
+        const product = new Product({
+            title: newProduct.title,
+            price: newProduct.price,
+            description: newProduct.description,
+            category: newProduct.category,
+            image: newProduct.image,
+            rating: {
+                rate: newProductRatingRate,
+                count: newProductRatingCount
+            }
+        });
+
         const addedProduct = await product.save();
 
         res.json(addedProduct);

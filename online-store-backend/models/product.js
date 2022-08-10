@@ -1,17 +1,36 @@
 const mongoose = require("mongoose");
+const { getMissingFieldString } = require("../utils/helpers");
 
 const productSchema = new mongoose.Schema({
-    title: String,
-    price: Number,
-    description: String,
+    title: {
+        type: String,
+        required: [true, getMissingFieldString("title")]
+    },
+    price: {
+        type: Number,
+        required: [true, getMissingFieldString("price")]
+    },
+    description: {
+        type: String,
+        default: ""
+    },
     category: {
         type: mongoose.Types.ObjectId,
         ref: "Category"
     },
-    image: String,
+    image: {
+        type: String,
+        default: ""
+    },
     rating: {
-        rate: Number,
-        count: Number
+        rate: {
+            type: Number,
+            default: 0
+        },
+        count: {
+            type: Number,
+            default: 0
+        }
     }
 });
 

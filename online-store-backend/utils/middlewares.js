@@ -1,24 +1,32 @@
 const logger = require("./logger");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("./config");
+const User = require("../models/user");
+const { getErrorMsgObj, getMissingFieldString } = require("./helpers");
 
-function requestLoggerMiddleware(req, res, next) {
-    logger.info(`method: ${req.method}, url: ${req.url}, body: ${JSON.stringify(req.body)}, authorization: ${req.get("Authorization")}`);
+function requestLogger(req, res, next) {
+    logger.info(`method: ${req.method}, url: ${req.url}, body: ${JSON.stringify(req.body)}, isAuthHeaderPresent: ${Boolean(req.get("Authorization"))}`);
 
     next();
 };
 
-function unknownEndpointMiddleware(req, res) {
-    res.status(404).json({error: "unknown endpoint"});
+function unknownEndpointHandler(req, res) {
+    res.status(404).json(getErrorMsgObj("Unknown endpoint"));
 };
 
-function errorHandlingMiddleware(err, req, res, next) {
+function errorHandler(err, req, res, next) {
     logger.error(err);
+
+    if (err.name === "ValidationError")
+        return res.status(400).json(getErrorMsgObj(err.message));
+
+    if (err.name === "CastError")
+        return res.status(400).json(getErrorMsgObj(err.message));
 
     next(err);
 };
 
-function getUserIfAuthorizedMiddleware(req, res, next) {
+function getUserIfAuthorized(req, res, next) {
     const authorization = req.get("Authorization"); // Case insensitive match
 
     let token;
@@ -38,13 +46,48 @@ function getUserIfAuthorizedMiddleware(req, res, next) {
     }
 };
 
-function idMatchMiddleware(req, res, next) {
+function adminCheck(req, res, next) {
+    if (req.decodedLoginObj.email !== "admin@company.com")
+        return res.status(401).json({error: "This route is only for the admin"});
+
+    next();
+};
+
+function idMatchCheck(req, res, next) {
     if (req.params.userId && req.params.userId !== req.decodedLoginObj.id)
         return res.status(402).json({error: "Users can only access their own shopping cart"});
 
     next();
 };
 
-module.exports = {unknownEndpointMiddleware, errorHandlingMiddleware,
-                  requestLoggerMiddleware, getUserIfAuthorizedMiddleware,
-                  idMatchMiddleware};
+function emailAndPasswCheck(req, res, next) {
+    const { email, password } = req.body;
+
+    if (email === undefined)
+        return res.status(400).json(getErrorMsgObj(getMissingFieldString("email")));
+    
+    if (password === undefined)
+        return res.status(400).json(getErrorMsgObj(getMissingFieldString("password")));
+
+    next();
+};
+
+async function getUser(req, res, next) {
+    try {
+        const user = await User.findOne({email: req.decodedLoginObj.email});
+
+        if (user === null)
+            return res.status(401).json(getErrorMsgObj("The provided email is not present in the database"));
+
+        req.user = user;
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+};
+
+module.exports = {unknownEndpointHandler, errorHandler,
+                  requestLogger, getUserIfAuthorized,
+                  idMatchCheck, adminCheck, emailAndPasswCheck,
+                  getUser};

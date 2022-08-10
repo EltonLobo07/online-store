@@ -1,78 +1,177 @@
 ROUTE HTTP_METHOD
 	INPUT
+		Extra information (Optional)
 
 	OUTPUT
+		Extra information (Optional)
 
-	DESCRIPTION
-------------------------------------------------------------
+	NOTE (Optional)
+----------------------------------------------------------------------------------------------------
+CATEGORIES
+----------------------------------------------------------------------------------------------------
+/api/categories	GET
+	{}
+
+	[{name: "categoryName", id: "uniqueString"}, ...]
+----------------------------------------------------------------------------------------------------
 LOGIN
-------------------------------------------------------------
-/api/login POST
-	body: {email: "example@gmail.com", password: "somePassword"}
+----------------------------------------------------------------------------------------------------
+/api/login	POST
+	{email: "example@gmail.com", password: "somePassword"}
+		email    - Required
+		password - Required
 
-	{token, id, shoppingCartItems}
-	token: Encoded, main content = {email, id}
-
-	The email should be registered with the store app before login 
-------------------------------------------------------------
+	{token: "JWTToken", id: "userId", shoppingCartItems: ["product1Id", "product2Id", ...]}
+		token - Contains user's email and id information and is signed using a secret key
+----------------------------------------------------------------------------------------------------
 USER
-------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 /api/users POST
-	body: {email: "example@gmail.com", password: "somePassword"}
+	{email: "example@gmail.com", password: "somePassword"}
+		email    - Required
+		password - Required, should be at least 5 characters long
 
-	{id, email, shoppingCartItems}
-
-	People can signup using this route
-------------------------------------------------------------
+	{id: "userId", email: "example@gmail.com", shoppingCartItems: []}
+----------------------------------------------------------------------------------------------------
 /api/users/userId/shoppingCartItems POST
 	
-	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-body: {productId}
+	-Authorization header field: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-{productId}
+		productId - Required
 
 	No output, only status code returned
 		200 - If already present in the shopping cart
 		201 - If added to the user's shopping cart
-
-	Allows users to add an item to their shopping cart
-------------------------------------------------------------
+	
+	The userId from the URL and the userId from the signed token should match
+----------------------------------------------------------------------------------------------------
 /api/users/userId/shoppingCartItems GET
 
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	Array of 'Product' objects
-
-	Allows users to get details of every product in their shopping cart
-------------------------------------------------------------
+	[{title: "product1Title", price: 100, id: "product1Id"}, ...]
+----------------------------------------------------------------------------------------------------
 /api/users/userId/shoppingCartItems/itemId DELETE
 
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	'User' object
+	{id: "userId", email: "example@gmail.com", shoppingCartItems: ["product1Id", ...]}
+----------------------------------------------------------------------------------------------------
+/api/users/userId/shoppingCartItems DELETE
 
-	Allows users to remove an item from their shopping cart
-------------------------------------------------------------
-PRODUCTS
-------------------------------------------------------------
-/api/products POST
-	
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	New 'Product' object
+	{id: "userId", email: "example@gmail.com", shoppingCartItems: []}
 
-	Only admin of the website (email === "admin@company.com") can add a new product to the list of products
-------------------------------------------------------------
+	This route is used to reset the shopping cart of the user
+----------------------------------------------------------------------------------------------------
+PRODUCTS
+----------------------------------------------------------------------------------------------------
+/api/products POST
+	
+	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-{
+		category: "categoryName",
+
+	 }
+	 	category    - Required
+		rating      - Optional, may contain 'rate' and 'count' fields
+		title       - Required
+		price       - Required
+		description - Optional
+		image       - Optional (Should be a URL if provided) 
+
+	{
+		title: "ProductTitle",
+		category: "uniqueStringRepresentingCategoryId",
+		price: 10000,
+		description: "",
+		image: "",
+		rating: {
+			rate: 0,
+			count: 0
+		},
+		id: "uniqueStringRepresentingProductId"
+	}
+
+	-Only admin of the website (email === "admin@company.com") can use this route
+	-The 'description', 'image', 'rating.rate', 'rating.count' default values are presented in 
+	 the output section above
+----------------------------------------------------------------------------------------------------
 /api/products GET
 	
-	NONE
+	{}
 
-	Array of 'Product' objects
+	[
+		{
+			rating: {
+				rate: 0,
+				count: 0
+			},
+			title: "ProductTitle",
+			price: 1000,
+			description: "",
+			category: {
+				name: "categoryName",
+				id: "uniqueStringRepresentingCategoryId"
+			},
+			image: "",
+			id: "uniqueStringRepresentingProductId"
+		}, 
+		...
+	]
 
-	Returns all of the available products in the store
-------------------------------------------------------------
+	The 'description', 'image', 'rating.rate', 'rating.count' default values are presented in 
+	 the output section above
+----------------------------------------------------------------------------------------------------
 /api/products/productId GET
 
-	NONE
+	{}
 
-	'Product' object
+	Same output as /api/products GET but only outputs matching product object 	
+----------------------------------------------------------------------------------------------------
+ORDERS
+----------------------------------------------------------------------------------------------------
+/api/orders POST
 
-	Returns a product whose Id matches with the provided productId in the URL
+	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-{
+		order: [
+			{item: "itemId", quantity: 1},
+			...
+		]
+	 }
+	 	item    - Required
+		quanity - Required
+
+	No output, only status code returned
+		201 - If added to the user's shopping cart
+----------------------------------------------------------------------------------------------------
+/api/orders GET
+
+	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-{}
+
+	[
+		{
+			user: {
+            email: "example@gmail.com",
+            id: "userId"
+        	},
+        	items: [
+				{
+					item: {
+						title: "productTitle",
+						price: 1000,
+						category: "categoryId",
+						id: "itemId"
+					},
+					quantity: 12
+				},
+				...
+        	],
+        	date: "2022-08-10T08:52:04.514Z",
+        	id: "orderId"
+		},
+		...
+	]

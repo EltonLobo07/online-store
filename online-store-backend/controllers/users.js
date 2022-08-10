@@ -1,46 +1,49 @@
 const router = require("express").Router();
 const User = require("../models/user");
+const Product = require("../models/product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../utils/config");
-const { getUserIfAuthorizedMiddleware, idMatchMiddleware } = require("../utils/middlewares");
+const { SECRET_KEY, PASSWORD_LENGTH } = require("../utils/config");
+const { getUserIfAuthorized, idMatchCheck, emailAndPasswCheck, getUser } = require("../utils/middlewares");
 const axios = require("axios");
+const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
 
-router.post("/", async (req, res, next) => {
+router.post("/", emailAndPasswCheck, async (req, res, next) => {
     const { email, password } = req.body;
-    
-    if (email === undefined || password === undefined)
-        return res.status(400).json({error: "'email' or 'password' field missing in the request body."});
-        // 400 status code - Bad request 
 
     try {
+        if (password.length < PASSWORD_LENGTH)
+            return res.status(400).json(getErrorMsgObj(`Password should be at least ${PASSWORD_LENGTH} characters long`));
+
         const existingUser = await User.findOne({email});
 
         if (existingUser !== null)
-            return res.status(400).json({error: "email should be unique. The provided email address is already present in the database."});
+            return res.status(400).json(getErrorMsgObj("email should be unique. The provided email address is already present in the database"));
 
-        const passwordHash = await bcrypt.hash(password, saltRounds = 10);
+        const passwordHash = await bcrypt.hash(password, 10);
         const newUser = new User({email, passwordHash, shoppingCartItems: []});
 
         const savedNewUser = await newUser.save();
-        res.status(201).send(savedNewUser);
+        res.status(201).json(savedNewUser);
     }
     catch(err) {
         next(err);
     }
 });
 
-router.post("/:userId/shoppingCartItems/", getUserIfAuthorizedMiddleware, idMatchMiddleware, async (req, res, next) => {
+router.post("/:userId/shoppingCartItems/", getUserIfAuthorized, idMatchCheck, getUser, async (req, res, next) => {
     const { productId } = req.body;
 
     if (productId === undefined)
-        return res.status(400).json({error: "'productId' field missing"});
+        return res.status(400).json(getErrorMsgObj(getMissingFieldString("productId")));
 
     try {
-        const user = await User.findOne({email: req.decodedLoginObj.email});
+        const user = req.user;
 
-        if (user === null)
-            return res.status(400).json({error: "The provided email is not present in the database"});
+        const product = await Product.findOne({_id: productId});
+
+        if (product === null)
+            return res.status(400).json(getErrorMsgObj("The provided productId is not present in the database"))
 
         if (user.shoppingCartItems.includes(productId))
             return res.status(200).end();
@@ -54,12 +57,12 @@ router.post("/:userId/shoppingCartItems/", getUserIfAuthorizedMiddleware, idMatc
     }
 });
 
-router.get("/:userId/shoppingCartItems", getUserIfAuthorizedMiddleware, idMatchMiddleware, async (req, res, next) => {
+router.get("/:userId/shoppingCartItems", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
     try {
-        const user = await User.findOne({email: req.decodedLoginObj.email}).populate("shoppingCartItems");
+        const user = await User.findOne({email: req.decodedLoginObj.email}).populate("shoppingCartItems", {title: 1, price: 1});
 
         if (user === null)
-            return res.status(401).json({error: "The provided email didn't match any user from the database"});
+            return res.status(401).json(getErrorMsgObj("The provided email is not present in the database"));
 
         res.json(user.shoppingCartItems);
     }
@@ -68,14 +71,11 @@ router.get("/:userId/shoppingCartItems", getUserIfAuthorizedMiddleware, idMatchM
     }
 });
 
-router.delete("/:userId/shoppingCartItems/:itemId", getUserIfAuthorizedMiddleware, idMatchMiddleware, async (req, res, next) => {
+router.delete("/:userId/shoppingCartItems/:itemId", getUserIfAuthorized, idMatchCheck, getUser, async (req, res, next) => {
     try {
-        const user = await User.findOne({email: req.decodedLoginObj.email});
-
-        if (user === null)
-            return res.status(401).json({error: "The provided email didn't match any user from the database"});
-        
-        user.shoppingCartItems = user.shoppingCartItems.filter(item => String(item._id) !== req.params.itemId);
+        const user = req.user;
+        const itemId = req.params.itemId;
+        user.shoppingCartItems = user.shoppingCartItems.filter(item => String(item._id) !== itemId);
         await user.save();
         res.status(204).end();
     }
@@ -84,16 +84,12 @@ router.delete("/:userId/shoppingCartItems/:itemId", getUserIfAuthorizedMiddlewar
     }
 });
 
-router.patch("/:userId/shoppingCartItems/", getUserIfAuthorizedMiddleware, idMatchMiddleware, async (req, res, next) => {
+router.delete("/:userId/shoppingCartItems/", getUserIfAuthorized, idMatchCheck, getUser, async (req, res, next) => {
     try {
-        const user = await User.findOne({email: req.decodedLoginObj.email});
-
-        if (user === null)
-            return res.status(401).json({error: "The provided email didn't match any user from the database"});
-
+        const user = req.user;
         user.shoppingCartItems = [];
         await user.save();
-        res.status(200).end();
+        res.status(204).end();
     }
     catch(err) {
         next(err);

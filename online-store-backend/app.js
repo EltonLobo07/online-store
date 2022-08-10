@@ -7,7 +7,7 @@ const categoryRouter = require("./controllers/categories");
 const logger = require("./utils/logger");
 const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
-const { unknownEndpointMiddleware, errorHandlingMiddleware, requestLoggerMiddleware } = require("./utils/middlewares");
+const { unknownEndpointHandler, errorHandler, requestLogger } = require("./utils/middlewares");
 
 // Connect to your DB here
 mongoose.connect(DB_URI)
@@ -18,7 +18,7 @@ const app = express();
 
 app.use(express.json()); // Sets request's body field to received JS object
 
-app.use(requestLoggerMiddleware);
+app.use(requestLogger);
 
 app.use("/api/users", userRouter);
 
@@ -30,8 +30,8 @@ app.use("/api/orders", orderRouter);
 
 app.use("/api/categories", categoryRouter);
 
-app.use(unknownEndpointMiddleware);
+app.use(unknownEndpointHandler);
 
-app.use(errorHandlingMiddleware);
+app.use(errorHandler);
 
 module.exports = app;

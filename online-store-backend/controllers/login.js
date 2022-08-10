@@ -3,29 +3,28 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../utils/config");
+const { emailAndPasswCheck } = require("../utils/middlewares");
+const { getErrorMsgObj } = require("../utils/helpers"); 
 
-router.post("/", async (req, res, next) => {
+router.post("/", emailAndPasswCheck, async (req, res, next) => {
     const { email, password } = req.body;
 
-    if (email === undefined || password === undefined)
-        return res.status(400).json({error: "'email' or 'password' field missing in the request body."});
-
     try {
-        const userArray = await User.find({email});
+        const userFromDB = await User.findOne({email});
         
-        if (userArray.length == 0) 
-            return res.status(401).json({error: "The provided email is not present in the database"});
+        if (userFromDB === null) 
+            return res.status(401).json(getErrorMsgObj("The provided email is not present in the database"));
 
-        const user = userArray[0];
-
-        const isPasswordMatching = await bcrypt.compare(password, user.passwordHash);
+        const isPasswordMatching = await bcrypt.compare(password, userFromDB.passwordHash);
 
         if (!isPasswordMatching)
-            return res.status(401).json({error: "Provided password is incorrect"});
+            return res.status(401).json(getErrorMsgObj("The provided password is incorrect"));
 
-        const token = jwt.sign({email, id: String(user._id)}, SECRET_KEY);
+        const userIdString = String(userFromDB._id);
 
-        res.json({token, id: String(user._id), shoppingCartItems: user.shoppingCartItems});
+        const token = jwt.sign({email, id: userIdString}, SECRET_KEY);
+
+        res.json({token, id: userIdString, shoppingCartItems: userFromDB.shoppingCartItems});
     }
     catch(err) {
         next(err);
