@@ -32,20 +32,27 @@ const StyledProduct = styled.div`
     }
 `;
 
-function Product({ user, setUser, product }) {
+function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
+    const inTheCart = productsInTheCart[product.id] !== undefined;
+
     async function handleClick() {
         if (user) {
             try {
-                const responseStatusCode = await userService.addItemToShoppingCart({productId: product.id}, user.id, user.token);
-                
-                if (responseStatusCode === 201)
-                {
-                    const userCopy = {...user, shoppingCartItems: user.shoppingCartItems.concat(product.id)};
-                    window.localStorage.setItem("user", JSON.stringify(userCopy)); 
-                    setUser(userCopy);
+                if (inTheCart) {
+                    await userService.removeShoppingCartProduct(product.id, user.id, user.token);
+                    const productsInTheCartCopy = {...productsInTheCart};
+                    delete productsInTheCartCopy[product.id];
+
+                    setProductsInTheCart(productsInTheCartCopy);
                 }
-                else
-                    alert("This product is already added");
+                else {
+                    await userService.addProductToShoppingCart({productId: product.id}, user.id, user.token);
+                    
+                    const obj = {};
+                    obj[product.id] = 1;
+
+                    setProductsInTheCart({...productsInTheCart, ...obj});
+                } 
             }
             catch(err) {
                 alert(err?.response?.data?.error || err.message);
@@ -60,7 +67,7 @@ function Product({ user, setUser, product }) {
             </div>
             <div style = {{fontWeight: 600}}>{product.title}</div>
             <div>${product.price}</div>
-            <StyledButton onClick = {handleClick}>Add to cart</StyledButton>
+            <StyledButton onClick = {handleClick} inTheCart = {inTheCart}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</StyledButton>
         </StyledProduct>
     );
 };
@@ -68,7 +75,8 @@ function Product({ user, setUser, product }) {
 Product.propTypes = {
     product: PropTypes.object.isRequired,
     user: PropTypes.object,
-    setUser: PropTypes.func.isRequired
+    productsInTheCart: PropTypes.object.isRequired,
+    setProductsInTheCart: PropTypes.func.isRequired
 };
 
 export default Product;

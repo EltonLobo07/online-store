@@ -3,8 +3,8 @@ import userService from "./users";
 
 const baseUrl = "/api/orders"
 
-async function order(token, userId, order) {
-    const response = await axios.post(baseUrl, {order}, {headers: {Authorization: `Bearer ${token}`}});
+async function order(token, userId) {
+    const response = await axios.post(baseUrl, null, {headers: {Authorization: `Bearer ${token}`}});
     
     if (response.status === 201)
     {

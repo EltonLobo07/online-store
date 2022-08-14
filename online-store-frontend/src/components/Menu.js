@@ -30,7 +30,7 @@ function Menu({ user, setUser }) {
             <Link to = "/checkout">Checkout</Link>
 
             {user ? <button onClick = {handleClick}>
-                        {`${user.id} (${user.shoppingCartItems.length})`}
+                        {`${user.id}`}
                     </button> :
                     <Link to = "/login">LogIn</Link>}
         </StyledMenu>

@@ -1,59 +1,39 @@
 const Order = require("../models/order");
 const Product = require("../models/product");
+const User = require("../models/user");
 const { getUserIfAuthorized, adminCheck } = require("../utils/middlewares");
 const router = require("express").Router();
 const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
 
 router.post("/", getUserIfAuthorized, async (req, res, next) => {
-    const orderLst = req.body.order;
+    const user = await User.findOne({_id: req.decodedLoginObj.id});
 
-    if (orderLst === undefined)
-        return res.status(400).json(getErrorMsgObj(getMissingFieldString("order")));
-        
-    if (!Array.isArray(orderLst))
-        return res.status(400).json(getErrorMsgObj(`'order' field should be a list, received type: ${typeof orderLst}`));
+    const checkoutProducts = [];
 
-    if (orderLst.length === 0)
-        return res.status(400).json(getErrorMsgObj("The order list has 0 items to order")); 
-
-    try {
-        const itemsToOrder = [];
-
-        for (let itemNumber = 0; itemNumber < orderLst.length; itemNumber++)
-        {
-            const curItem = orderLst[itemNumber];
-
-            if (!curItem.item)
-                return res.status(400).json(getErrorMsgObj(getMissingFieldString("item")));
+    for (const [productId, quantity] of user.shoppingCartProducts.entries()) {
+        if (quantity === 0)
+            return res.status(400).json(getErrorMsgObj("The order list has 0 items to order"));
             
-            if (curItem.quantity === undefined)
-                return res.status(400).json(getErrorMsgObj(getMissingFieldString("quantity")));
+        checkoutProducts.push({product: productId, quantity});
+    };
 
-            const item = await Product.findOne({_id: curItem.item});
+    if (checkoutProducts.length === 0)
+        return res.status(400).json(getErrorMsgObj("The order list is empty")); 
 
-            if (item === null)
-                return res.status(400).json(getErrorMsgObj(`Item Id: ${curItem.item} was not found in the database`));
+    const newOrder = new Order({
+        user: req.decodedLoginObj.id,
+        products: checkoutProducts,
+        date: new Date()
+    });
 
-            itemsToOrder.push({item: curItem.item, quantity: curItem.quantity});
-        }
-
-        const newOrder = new Order({
-            user: req.decodedLoginObj.id,
-            items: itemsToOrder,
-            date: new Date()
-        });
-
-        await newOrder.save();
-        res.status(201).end();
-    }
-    catch(err) {
-        next(err);
-    }
+    const returnedObj = await newOrder.save();
+    console.log(returnedObj);
+    res.status(201).end();
 });
 
 router.get("/", getUserIfAuthorized, adminCheck, async (req, res, next) => {
     try {
-        const orders = await Order.find().populate("user", {email: 1}).populate("items.item", {title: 1, price: 1, category: 1});
+        const orders = await Order.find().populate("user", {email: 1}).populate("products.product", {title: 1, price: 1, category: 1});
         res.json(orders);
     }
     catch(err) {

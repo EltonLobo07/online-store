@@ -1,8 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const { getMissingFieldString } = require("../utils/helpers");
 
-const orderedItemSchema = new mongoose.Schema({
-    item: {
+const orderedProductSchema = new mongoose.Schema({
+    product: {
         type: mongoose.Types.ObjectId,
         ref: "Product"
     },
@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User"
     },
-    items: [orderedItemSchema],
+    products: [orderedProductSchema],
     date: {
         type: Date
     } 

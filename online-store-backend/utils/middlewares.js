@@ -72,22 +72,7 @@ function emailAndPasswCheck(req, res, next) {
     next();
 };
 
-async function getUser(req, res, next) {
-    try {
-        const user = await User.findOne({email: req.decodedLoginObj.email});
-
-        if (user === null)
-            return res.status(401).json(getErrorMsgObj("The provided email is not present in the database"));
-
-        req.user = user;
-        next();
-    }
-    catch (err) {
-        next(err);
-    }
-};
-
 module.exports = {unknownEndpointHandler, errorHandler,
                   requestLogger, getUserIfAuthorized,
-                  idMatchCheck, adminCheck, emailAndPasswCheck,
-                  getUser};
+                  idMatchCheck, adminCheck, emailAndPasswCheck
+                 };

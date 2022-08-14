@@ -21,7 +21,7 @@ LOGIN
 		email    - Required
 		password - Required
 
-	{token: "JWTToken", id: "userId", shoppingCartItems: ["product1Id", "product2Id", ...]}
+	{token: "JWTToken", id: "userId"}
 		token - Contains user's email and id information and is signed using a secret key
 ----------------------------------------------------------------------------------------------------
 USER
@@ -31,9 +31,9 @@ USER
 		email    - Required
 		password - Required, should be at least 5 characters long
 
-	{id: "userId", email: "example@gmail.com", shoppingCartItems: []}
+	{id: "userId", email: "example@gmail.com", shoppingCartProducts: {}}
 ----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartItems POST
+/api/users/userId/shoppingCartProducts POST
 	
 	-Authorization header field: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 	-{productId}
@@ -45,25 +45,42 @@ USER
 	
 	The userId from the URL and the userId from the signed token should match
 ----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartItems GET
+/api/users/userId/shoppingCartProducts GET
 
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	[{title: "product1Title", price: 100, id: "product1Id"}, ...]
+	{"productId1": 12, ...}
 ----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartItems/itemId DELETE
+/api/users/userId/shoppingCartProducts/ProductId DELETE
 
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	{id: "userId", email: "example@gmail.com", shoppingCartItems: ["product1Id", ...]}
+	No output, only status code returned
+		204 - If all the operations were performed successfully
+
+	The userId from the URL and the userId from the signed token should match
 ----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartItems DELETE
+/api/users/userId/shoppingCartProducts DELETE
 
 	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
 
-	{id: "userId", email: "example@gmail.com", shoppingCartItems: []}
+	No output, only status code returned
+		204 - If all the operations were performed successfully
 
-	This route is used to reset the shopping cart of the user
+	-The userId from the URL and the userId from the signed token should match
+	-This route is used to reset the shopping cart of the user
+----------------------------------------------------------------------------------------------------
+/api/users/userId/shoppingCartProducts/ProductId DELETE
+
+	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
+	-{quantity: 12}
+		-If quantity cannot be converted to an integer, operation is unsucessful
+		-Math.max(Math.floor(quanity), 1) is used as quanity value to be stored in the database
+
+	No output, only status code returned
+		204 - If all the operations were performed successfully
+
+	The userId from the URL and the userId from the signed token should match
 ----------------------------------------------------------------------------------------------------
 PRODUCTS
 ----------------------------------------------------------------------------------------------------

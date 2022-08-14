@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 const Button = styled.button`
-    background-color: black;
-    color: white;
+    background-color: ${props => props.inTheCart ? "white" : "black"};
+    color: ${props => props.inTheCart ? "black" : "white"};
     padding: 8px;
-    border: none;
+    border: 1px solid black;
 `;
 
 export default Button;

@@ -3,6 +3,7 @@ import Product from "./Product";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import productService from "../services/products";
+import userService from "../services/users";
 
 const StyledProducts = styled.div`
     // To center the header on viewport with large width 
@@ -20,25 +21,44 @@ const StyledProducts = styled.div`
         padding: 32px;
         gap: 32px;
     }
+
+    .numProductsDisplay {
+        grid-column-start: 1;
+        grid-column-end: -1;
+        text-align: center;
+    }
 `;
 
 function Products() {
     const [products, setProducts] = useState([]);
-    const [user, setUser] = useOutletContext();
+    const [user] = useOutletContext();
+    const [productsInTheCart, setProductsInTheCart] = useState({});
 
     useEffect(() => {
         productService.getAllProducts()
                       .then(products => setProducts(products))
                       .catch(err => console.log(err));
-    }, []);
+
+        if (user)
+        {
+            userService.getShoppingCartProducts(user.id, user.token)
+                       .then(shoppingCartProducts => setProductsInTheCart(shoppingCartProducts))
+                       .catch(err => alert(err?.response?.data?.error || err.message));
+        }
+    }, [user]);
 
     return (
         <StyledProducts>
             <div>
+                <div className = "numProductsDisplay">
+                    {`Number of products in the cart: ${Object.keys(productsInTheCart).length}`}
+                </div>
+
                 {products.map(product => <Product key = {product.id} 
                                                   product = {product}
                                                   user = {user}
-                                                  setUser = {setUser} />)}
+                                                  productsInTheCart = {productsInTheCart}
+                                                  setProductsInTheCart = {setProductsInTheCart} />)}
             </div>
         </StyledProducts>
     );
