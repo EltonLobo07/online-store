@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import userService from "../services/users";
 
 function SignUp() {
+    const [Name, setName] = useState(""); // First letter is capital for 'name' variable (intentional)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            await userService.createUser({email, password});
+            await userService.createUser({name: Name, email, password});
 
             // Why use "await" keyword here? Maybe read the below stackoverflow question and answers
             // https://stackoverflow.com/questions/56895695/why-do-i-need-to-await-an-async-function-when-it-is-not-supposedly-returning-a-p#:~:text=Async%2Fawait%20does%20not%20do,how%20the%20async%20function%20works.
@@ -28,13 +29,23 @@ function SignUp() {
 
         setEmail("");
         setPassword("");
+        setName("");
     };
 
     return (
         <form onSubmit = {handleSubmit}>
             <FormContainer>
                 <LabelAndInputContainer>
-                    <label htmlFor = "email">Email:</label>
+                    <label htmlFor = "Name">Name*:</label>
+                    <input  type = "text"
+                            id = "Name" 
+                            placeholder = "Elton" 
+                            value = {Name}
+                            onChange = {e => setName(e.target.value)} />
+                </LabelAndInputContainer>
+
+                <LabelAndInputContainer>
+                    <label htmlFor = "email">Email*:</label>
                     <input  type = "email"
                             id = "email" 
                             placeholder = "elton@example.com" 
@@ -43,10 +54,10 @@ function SignUp() {
                 </LabelAndInputContainer>
 
                 <LabelAndInputContainer>
-                    <label htmlFor = "password">Password:</label>
+                    <label htmlFor = "password">Password*:</label>
                     <input  type = "password"
                             id = "password" 
-                            placeholder = "Enter your password here" 
+                            placeholder = "myPassword123" 
                             value = {password}
                             onChange = {e => setPassword(e.target.value)} />
                 </LabelAndInputContainer>

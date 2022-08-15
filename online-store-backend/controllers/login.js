@@ -24,7 +24,7 @@ router.post("/", emailAndPasswCheck, async (req, res, next) => {
 
         const token = jwt.sign({email, id: userIdString}, SECRET_KEY);
 
-        res.json({token, id: userIdString});
+        res.json({token, id: userIdString, name: userFromDB.name});
     }
     catch(err) {
         next(err);

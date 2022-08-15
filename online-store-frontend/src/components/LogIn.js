@@ -30,7 +30,7 @@ function LogIn() {
             <form onSubmit = {handleSubmit}>
                 <FormContainer>
                     <LabelAndInputContainer>
-                        <label htmlFor = "email">Email:</label>
+                        <label htmlFor = "email">Email*:</label>
                         <input  type = "email" 
                                 id = "email" 
                                 placeholder = "elton@example.com"
@@ -39,10 +39,10 @@ function LogIn() {
                     </LabelAndInputContainer>
 
                     <LabelAndInputContainer>
-                        <label htmlFor = "password">Password:</label>
+                        <label htmlFor = "password">Password*:</label>
                         <input  type = "password" 
                                 id = "password" 
-                                placeholder = "Enter your password here"
+                                placeholder = "myPassword123"
                                 value = {password}
                                 onChange = {e => setPassword(e.target.value)} />
                     </LabelAndInputContainer>

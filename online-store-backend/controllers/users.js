@@ -9,19 +9,22 @@ const axios = require("axios");
 const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
 
 router.post("/", emailAndPasswCheck, async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
 
-    try {
-        if (password.length < PASSWORD_LENGTH)
+    if (name === undefined)
+        return res.status(400).json(getErrorMsgObj(getMissingFieldString("name")));
+
+    if (password.length < PASSWORD_LENGTH)
             return res.status(400).json(getErrorMsgObj(`Password should be at least ${PASSWORD_LENGTH} characters long`));
 
+    try {
         const existingUser = await User.findOne({email});
 
         if (existingUser !== null)
             return res.status(400).json(getErrorMsgObj("email should be unique. The provided email address is already present in the database"));
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const newUser = new User({email, passwordHash, shoppingCartProducts: {}});
+        const newUser = new User({email, passwordHash, name, shoppingCartProducts: {}});
 
         const savedNewUser = await newUser.save();
         res.status(201).json(savedNewUser);
