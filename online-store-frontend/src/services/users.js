@@ -47,9 +47,15 @@ async function getShoppingCartProductQuantity(token, userId, productId) {
     return response.data;
 };
 
+async function isProductPresentInTheCart(token, userId, productId) {
+    const response = await axios.get(`${baseUrl}/${userId}/shoppingCartProducts/${productId}/isProductPresent`, {headers: {Authorization: `Bearer ${token}`}});
+    return response.data;
+};
+
 const exposedObj = {createUser, addProductToShoppingCart, 
                     getShoppingCartProducts, removeShoppingCartProduct,
                     resetShoppingCart, updateShoppingCartProduct,
-                    getShoppingCartProductQuantity, getShoppingCartProductsDetailed};
+                    getShoppingCartProductQuantity, getShoppingCartProductsDetailed,
+                    isProductPresentInTheCart};
 
 export default exposedObj;

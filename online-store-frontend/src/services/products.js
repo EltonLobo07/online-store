@@ -7,6 +7,11 @@ async function getAllProducts() {
     return response.data;
 };
 
-const exposedObj = {getAllProducts};
+async function getOneProduct(productId) {
+    const response = await axios.get(`${baseUrl}/${productId}`);
+    return response.data;
+};
+
+const exposedObj = {getAllProducts, getOneProduct};
 
 export default exposedObj;

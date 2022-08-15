@@ -167,4 +167,17 @@ router.get("/:userId/shoppingCartProducts/:productId", getUserIfAuthorized, idMa
     }
 });
 
+router.get("/:userId/shoppingCartProducts/:productId/isProductPresent", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+    const { productId } = req.params;
+
+    try {
+        const user = await User.findOne({_id: req.decodedLoginObj.id});
+
+        return res.json(user.shoppingCartProducts.get(productId) !== undefined);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;

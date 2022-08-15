@@ -7,18 +7,29 @@ import Checkout from "./components/Checkout";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
+import DetailedProduct from "./components/DetailedProduct";
+import UnknownPath from "./components/UnknownPath";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter>
         <Routes>
             <Route path = "/" element = {<App />}>
-                <Route path = "" element = {<Home />}></Route>
-                <Route path = "products" element = {<Products />}></Route>
-                <Route path = "checkout" element = {<Checkout />}></Route>
+                <Route index element = {<Home />} />
+                <Route path = "/home" element = {<Home />} />
+
+                <Route path = "products" element = {<Products />} />
+
+                <Route path = "products/:id" element = {<DetailedProduct />} />
+
+                <Route path = "checkout" element = {<Checkout />} />
             </Route>
-            <Route path = "login" element = {<LogIn />}></Route>
-            <Route path = "signup" element = {<SignUp />}></Route>
+            
+            <Route path = "login" element = {<LogIn />} />
+
+            <Route path = "signup" element = {<SignUp />} />
+
+            <Route path = "*" element = {<UnknownPath />} />
         </Routes>
     </BrowserRouter>
 );

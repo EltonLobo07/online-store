@@ -2,9 +2,10 @@ import PropTypes from "prop-types";
 import StyledButton from "./Button";
 import styled from "styled-components";
 import userService from "../services/users";
+import { useNavigate } from "react-router-dom";
 
 const StyledProduct = styled.div`
-    height: 300px;
+    height: 350px;
 
     display: flex;
     flex-direction: column;
@@ -34,8 +35,9 @@ const StyledProduct = styled.div`
 
 function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
     const inTheCart = productsInTheCart[product.id] !== undefined;
+    const navigate = useNavigate();
 
-    async function handleClick() {
+    async function handleCartClick() {
         if (user) {
             try {
                 if (inTheCart) {
@@ -60,6 +62,10 @@ function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
         }
     };
 
+    function handleMoreDetailsClick() {
+        navigate(product.id);
+    };
+
     return (
         <StyledProduct>
             <div>
@@ -67,7 +73,8 @@ function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
             </div>
             <div style = {{fontWeight: 600}}>{product.title}</div>
             <div>${product.price}</div>
-            <StyledButton onClick = {handleClick} inTheCart = {inTheCart}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</StyledButton>
+            <StyledButton onClick = {handleCartClick} inTheCart = {inTheCart}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</StyledButton>
+            <StyledButton onClick = {handleMoreDetailsClick}>More details</StyledButton>
         </StyledProduct>
     );
 };
