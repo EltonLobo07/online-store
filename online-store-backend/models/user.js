@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     shoppingCartProducts: {
         type: Map, 
         of: Number 
+    },
+    address: {
+        type: String,
+        default: ""
     }
 });
 

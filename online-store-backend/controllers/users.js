@@ -9,7 +9,7 @@ const axios = require("axios");
 const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
 
 router.post("/", emailAndPasswCheck, async (req, res, next) => {
-    const { email, password, name } = req.body;
+    const { email, password, name, address } = req.body;
 
     if (name === undefined)
         return res.status(400).json(getErrorMsgObj(getMissingFieldString("name")));
@@ -24,7 +24,13 @@ router.post("/", emailAndPasswCheck, async (req, res, next) => {
             return res.status(400).json(getErrorMsgObj("email should be unique. The provided email address is already present in the database"));
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const newUser = new User({email, passwordHash, name, shoppingCartProducts: {}});
+
+        const newUserObj = {email, passwordHash, name, shoppingCartProducts: {}};
+
+        if (address)
+            newUserObj.address = address;
+
+        const newUser = new User(newUserObj);
 
         const savedNewUser = await newUser.save();
         res.status(201).json(savedNewUser);
@@ -179,6 +185,35 @@ router.get("/:userId/shoppingCartProducts/:productId/isProductPresent", getUserI
         return res.json(user.shoppingCartProducts.get(productId) !== undefined);
     }
     catch (err) {
+        next(err);
+    }
+});
+
+router.get("/:userId/address", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+    try {
+        const user = await User.findOne({_id: req.decodedLoginObj.id});
+
+        return res.json(user.address);
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
+router.put("/:userId/address", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+    const { address } = req.body;
+
+    if (!address === undefined)
+        return res.status(400).json(getErrorMsgObj(getMissingFieldString("address")));
+
+    try {
+        const user = await User.findOne({_id: req.decodedLoginObj.id});
+
+        user.address = address;
+        await user.save();
+        return res.status(204).end();
+    }
+    catch(err) {
         next(err);
     }
 });

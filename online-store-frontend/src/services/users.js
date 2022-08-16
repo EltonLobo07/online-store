@@ -52,10 +52,20 @@ async function isProductPresentInTheCart(token, userId, productId) {
     return response.data;
 };
 
+async function getAddress(token, userId) {
+    const response = await axios.get(`${baseUrl}/${userId}/address`, {headers: {Authorization: `Bearer ${token}`}});
+    return response.data;
+};
+
+async function setAddress(token, userId, address) {
+    const response = await axios.put(`${baseUrl}/${userId}/address`, {address}, {headers: {Authorization: `Bearer ${token}`}});
+    return response.status;
+}
+
 const exposedObj = {createUser, addProductToShoppingCart, 
                     getShoppingCartProducts, removeShoppingCartProduct,
                     resetShoppingCart, updateShoppingCartProduct,
                     getShoppingCartProductQuantity, getShoppingCartProductsDetailed,
-                    isProductPresentInTheCart};
+                    isProductPresentInTheCart, getAddress, setAddress};
 
 export default exposedObj;

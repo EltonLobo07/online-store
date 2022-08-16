@@ -6,6 +6,7 @@ import ShoppingCartProduct from "./ShoppingCartProduct";
 import DisplayTotalPrice from "./DisplayTotalPrice";
 import Button from "./Button";
 import orderService from "../services/orders";
+import EditAddress from "./EditAddress";
 
 const StyledCheckout = styled.div` 
     display: flex;
@@ -36,7 +37,7 @@ function resetGlobals() {
 };
 
 function Checkout() {
-    const [productsToBuy, setProductsToBuy] = useState([]); 
+    const [productsToBuy, setProductsToBuy] = useState([]);
     const [user] = useOutletContext();
     const ref = useRef(null);
     const navigate = useNavigate();
@@ -93,6 +94,8 @@ function Checkout() {
                                                                    totalPriceObj = {ref} ></ShoppingCartProduct>)}
 
                 <DisplayTotalPrice initialTotalPrice = {initialTotalPrice} ref = {ref} />
+
+                <EditAddress user = {user} />
 
                 <Button onClick = {handleClick}>Order</Button>
             </div>

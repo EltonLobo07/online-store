@@ -10,7 +10,7 @@ const orderedProductSchema = new mongoose.Schema({
         type: Number,
         required: [true, getMissingFieldString("quantity")],
         min: [1, "'quantity' field should be >= 1"]
-    } 
+    }
 }, {_id: false});
 
 const orderSchema = new mongoose.Schema({
@@ -21,7 +21,10 @@ const orderSchema = new mongoose.Schema({
     products: [orderedProductSchema],
     date: {
         type: Date
-    } 
+    },
+    address: {
+        type: String
+    }
 });
 
 orderSchema.set("toJSON", {
