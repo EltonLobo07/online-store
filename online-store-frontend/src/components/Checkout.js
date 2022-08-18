@@ -40,8 +40,7 @@ function Checkout() {
     const [productsToBuy, setProductsToBuy] = useState([]);
     const [user] = useOutletContext();
     const ref = useRef(null);
-    const navigate = useNavigate();
-    navigateFunc = navigate;
+    navigateFunc = useNavigate();
 
     async function handleClick() {
         try {
@@ -70,7 +69,7 @@ function Checkout() {
             navigateFunc("/login", {replace: true});
 
         return resetGlobals;
-    }, [user, ref]);
+    }, [user]);
     // useEffect will run only once anyways
 
     if (user === undefined) // User is not logged in

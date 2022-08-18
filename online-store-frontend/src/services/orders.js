@@ -15,6 +15,11 @@ async function order(token, userId) {
     return response.status;
 };
 
-const exposedObj = {order};
+async function getUserOrders(token) {
+    const response = await axios.get(`${baseUrl}/user`, {headers: {Authorization: `Bearer ${token}`}});
+    return response.data;
+};
+
+const exposedObj = {order, getUserOrders};
 
 export default exposedObj;

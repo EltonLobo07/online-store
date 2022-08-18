@@ -9,6 +9,7 @@ import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import DetailedProduct from "./components/DetailedProduct";
 import UnknownPath from "./components/UnknownPath";
+import Orders from "./components/Orders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -23,6 +24,8 @@ root.render(
                 <Route path = "products/:id" element = {<DetailedProduct />} />
 
                 <Route path = "checkout" element = {<Checkout />} />
+
+                <Route path = "your-orders" element = {<Orders />} />
             </Route>
             
             <Route path = "login" element = {<LogIn />} />

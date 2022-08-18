@@ -48,4 +48,14 @@ router.get("/", getUserIfAuthorized, adminCheck, async (req, res, next) => {
     }
 });
 
+router.get("/user", getUserIfAuthorized, async (req, res, next) => {
+    try {
+        const orders = await Order.find({user: req.decodedLoginObj.id}).populate("products.product", {title: 1, price: 1});
+        res.json(orders);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;
