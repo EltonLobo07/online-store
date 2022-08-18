@@ -1,9 +1,14 @@
-import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
-import FormContainer from "./FormContainer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginService from "../services/login";
+
+import FullHeightCenteredFlexColumn from "./styled-components/FullHeightCenteredFlexColumn";
+import FormFlexColumn from "./styled-components/FormFlexColumn";
+import IconAndInputFlex from "./styled-components/IconAndInputFlex";
+import IconContainer from "./styled-components/IconContainer";
+import InputContainerFlex from "./styled-components/InputContainerFlex";
+import Input from "./styled-components/Input";
 
 function LogIn() {
     const [email, setEmail] = useState("");
@@ -27,29 +32,39 @@ function LogIn() {
     };
 
     return (
-            <form onSubmit = {handleSubmit}>
-                <FormContainer>
-                    <LabelAndInputContainer>
-                        <label htmlFor = "email">Email*:</label>
-                        <input  type = "email" 
-                                id = "email" 
-                                placeholder = "elton@example.com"
+        <FullHeightCenteredFlexColumn>
+            <h1>Login</h1>
+
+            <FormFlexColumn onSubmit = {handleSubmit} padding = "32px">
+                <IconAndInputFlex>
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/mail-icon.png")} alt = "Email address icon" />
+                    </IconContainer>
+                    
+                    <InputContainerFlex>
+                        <Input  type = "email"  
+                                placeholder = "Email Address*"
                                 value = {email}
                                 onChange = {e => setEmail(e.target.value)} />
-                    </LabelAndInputContainer>
+                    </InputContainerFlex>
+                </IconAndInputFlex>
 
-                    <LabelAndInputContainer>
-                        <label htmlFor = "password">Password*:</label>
-                        <input  type = "password" 
-                                id = "password" 
-                                placeholder = "myPassword123"
+                <IconAndInputFlex paddingRight = "8px">
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/padlock-icon.png")} alt = "Password icon" />
+                    </IconContainer>
+
+                    <InputContainerFlex paddingRight = "8px">
+                        <Input  type = "password"  
+                                placeholder = "Password*"
                                 value = {password}
                                 onChange = {e => setPassword(e.target.value)} />
-                    </LabelAndInputContainer>
+                    </InputContainerFlex>
+                </IconAndInputFlex>
 
-                    <Button>Submit</Button>
-                </FormContainer>
-            </form>
+                <Button>Login</Button>
+            </FormFlexColumn>
+        </FullHeightCenteredFlexColumn>
     );
 };
 

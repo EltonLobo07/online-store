@@ -353,14 +353,12 @@
 
 * {
     box-sizing: border-box;
-    font-family: monospace;
+}
+
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Oxygen, Cantarell, sans-serif;
 }
 
 html, body, #root {
     height: 100%;
 } 
-
-body
-{
-    margin: 0px;
-}

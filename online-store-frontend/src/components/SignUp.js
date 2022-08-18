@@ -1,9 +1,14 @@
-import FormContainer from "./FormContainer";
-import LabelAndInputContainer from "./LabelAndInputContainer";
 import Button from "./Button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/users";
+
+import FullHeightCenteredFlex from "./styled-components/FullHeightCenteredFlexColumn";
+import FormFlexColumn from "./styled-components/FormFlexColumn";
+import IconAndInputFlex from "./styled-components/IconAndInputFlex";
+import IconContainer from "./styled-components/IconContainer";
+import InputContainerFlex from "./styled-components/InputContainerFlex";
+import Input from "./styled-components/Input";
 
 function SignUp() {
     const [Name, setName] = useState(""); // First letter is capital for 'name' variable (intentional)
@@ -18,10 +23,7 @@ function SignUp() {
 
         try {
             await userService.createUser({name: Name, email, password, address});
-
-            // Why use "await" keyword here? Maybe read the below stackoverflow question and answers
-            // https://stackoverflow.com/questions/56895695/why-do-i-need-to-await-an-async-function-when-it-is-not-supposedly-returning-a-p#:~:text=Async%2Fawait%20does%20not%20do,how%20the%20async%20function%20works.
-            
+     
             alert("User created");
             navigate("/login");
         }
@@ -36,43 +38,77 @@ function SignUp() {
     };
 
     return (
-        <form onSubmit = {handleSubmit}>
-            <FormContainer>
-                <LabelAndInputContainer>
-                    <label htmlFor = "Name">Name*:</label>
-                    <input  type = "text"
-                            id = "Name" 
-                            placeholder = "Elton" 
-                            value = {Name}
-                            onChange = {e => setName(e.target.value)} />
-                </LabelAndInputContainer>
+        <FullHeightCenteredFlex>
+            <h1>Sign Up</h1>
 
-                <LabelAndInputContainer>
-                    <label htmlFor = "email">Email*:</label>
-                    <input  type = "email"
-                            id = "email" 
-                            placeholder = "elton@example.com" 
-                            value = {email}
-                            onChange = {e => setEmail(e.target.value)} />
-                </LabelAndInputContainer>
+            <FormFlexColumn onSubmit = {handleSubmit} padding = "32px">
+                <IconAndInputFlex>
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/name-icon.png")} alt = "Name icon" />
+                    </IconContainer>
 
-                <LabelAndInputContainer>
-                    <label htmlFor = "password">Password*:</label>
-                    <input  type = "password"
-                            id = "password" 
-                            placeholder = "myPassword123" 
-                            value = {password}
-                            onChange = {e => setPassword(e.target.value)} />
-                </LabelAndInputContainer>
+                    <InputContainerFlex paddingRight = "8px">
+                        <Input  type = "text"
+                                id = "Name" 
+                                placeholder = "Full name*" 
+                                value = {Name}
+                                onChange = {e => setName(e.target.value)} />
+                    </InputContainerFlex>
+                </IconAndInputFlex>
 
-                <LabelAndInputContainer>
-                    <label htmlFor = "address">Address:</label>
-                    <textarea id = "address" placeholder = "Address for order delivery" rows = "10" cols = "30" onChange = {e => setAddress(e.target.value)}></textarea>
-                </LabelAndInputContainer>
+                <IconAndInputFlex>
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/mail-icon.png")} alt = "Email address icon" />
+                    </IconContainer>
 
-                <Button>Submit</Button>
-            </FormContainer>
-        </form>
+                    <InputContainerFlex paddingRight = "8px">
+                        <Input  type = "email"
+                                id = "email" 
+                                placeholder = "Email Address*" 
+                                value = {email}
+                                onChange = {e => setEmail(e.target.value)} />
+                    </InputContainerFlex>
+                </IconAndInputFlex>
+
+                <IconAndInputFlex>
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/padlock-icon.png")} alt = "Password icon" />
+                    </IconContainer>
+
+                    <InputContainerFlex paddingRight = "8px">
+                        <Input  type = "password"
+                                id = "password" 
+                                placeholder = "Password*" 
+                                value = {password}
+                                onChange = {e => setPassword(e.target.value)} />
+                    </InputContainerFlex>
+                </IconAndInputFlex>
+
+                <IconAndInputFlex>
+                    <IconContainer height = "50px" padding = "8px">
+                        <img src = {require("../images/address-icon.png")} alt = "Address icon" />
+                    </IconContainer>
+
+                    <div style = {{
+                        padding: "16px 0",
+                        display: "flex",
+                        flexGrow: "1",
+                        paddingRight: "8px"
+                    }}>
+                        <textarea id = "address" placeholder = "Address (Changable)" 
+                                  rows = "5" onChange = {e => setAddress(e.target.value)}
+                                  style = {{flexGrow: "1",
+                                    resize: "vertical",
+                                    backgroundColor: "rgb(240, 240, 240)",
+                                    border: "none",
+                                    outline: "none"
+                                  }}></textarea>
+                    </div>
+                </IconAndInputFlex>
+
+                <Button>Sign up</Button>
+            </FormFlexColumn>
+        </FullHeightCenteredFlex>
     );
 };
 

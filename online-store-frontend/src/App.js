@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MainContainer from "./components/MainContainer";
-import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {

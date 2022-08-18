@@ -10,6 +10,7 @@ import SignUp from "./components/SignUp";
 import DetailedProduct from "./components/DetailedProduct";
 import UnknownPath from "./components/UnknownPath";
 import Orders from "./components/Orders";
+import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
