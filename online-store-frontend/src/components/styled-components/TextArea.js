@@ -1,18 +1,22 @@
 import styled from "styled-components";
 
-const StyledInputField = styled.input`
+const StyledTextAreaField = styled.textarea`
     flex-grow: 1;
     background-color: inherit;
     border: none;
     outline: none;
     line-height: 1rem;
+    resize: vertical;
+    min-height: 34px;
+    max-height: 200px;
+    padding: 8px;
 `;
 
-function Input({ elementId, Icon, type, placeholder, value, onChange }) {
+function TextArea({ elementId, Icon, placeholder, value, onChange }) {
     return (
         <div style = {{
                  display: "flex",
-                 alignItems: "center",
+                 alignItems: "flex-start",
                  padding: "8px",
                  columnGap: "8px",
                  flexGrow: "1",
@@ -30,14 +34,14 @@ function Input({ elementId, Icon, type, placeholder, value, onChange }) {
                 }}/>
             </label>
 
-            <StyledInputField id = {elementId}
-                              type = {type}
-                              placeholder = {placeholder}
-                              value = {value}
-                              onChange = {onChange}
+            <StyledTextAreaField id = {elementId}
+                                 placeholder = {placeholder}
+                                 value = {value}
+                                 onChange = {onChange}
+                                 rows = "7"
             />
         </div>
     )
 };
 
-export default Input;
+export default TextArea;

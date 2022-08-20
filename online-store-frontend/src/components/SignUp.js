@@ -3,12 +3,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/users";
 
-import FullHeightCenteredFlex from "./styled-components/FullHeightCenteredFlexColumn";
-import FormFlexColumn from "./styled-components/FormFlexColumn";
-import IconAndInputFlex from "./styled-components/IconAndInputFlex";
-import IconContainer from "./styled-components/IconContainer";
-import InputContainerFlex from "./styled-components/InputContainerFlex";
+import CenterChildren from "./styled-components/CenterChildren";
+import FlexForm from "./styled-components/FlexForm";
 import Input from "./styled-components/Input";
+import TextArea from "./styled-components/TextArea";
+
+import { ReactComponent as EmailIcon } from "../images/svgs/mail-icon.svg";
+import { ReactComponent as NameIcon } from "../images/svgs/name-icon.svg";
+import { ReactComponent as PasswordIcon } from "../images/svgs/password-icon.svg";
+import { ReactComponent as AddressIcon } from "../images/svgs/address-icon.svg";
 
 function SignUp() {
     const [Name, setName] = useState(""); // First letter is capital for 'name' variable (intentional)
@@ -38,77 +41,66 @@ function SignUp() {
     };
 
     return (
-        <FullHeightCenteredFlex>
-            <h1>Sign Up</h1>
+        <CenterChildren flexDirection = "column" rowGap = "32px">
+            <h1 style = {{
+                    color: "var(--my-blue)"
+            }}>
+                Sign Up
+            </h1>
 
-            <FormFlexColumn onSubmit = {handleSubmit} padding = "32px">
-                <IconAndInputFlex>
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/name-icon.png")} alt = "Name icon" />
-                    </IconContainer>
+            <FlexForm onSubmit = {handleSubmit}
+                      padding = "32px"
+                      rowGap = "12px">
 
-                    <InputContainerFlex paddingRight = "8px">
-                        <Input  type = "text"
-                                id = "Name" 
-                                placeholder = "Full name*" 
-                                value = {Name}
-                                onChange = {e => setName(e.target.value)} />
-                    </InputContainerFlex>
-                </IconAndInputFlex>
+                <Input elementId = "name"
+                       Icon = {NameIcon}
+                       type = "text"
+                       placeholder = "Full name*"
+                       value = {Name}
+                       onChange = {e => setName(e.target.value)}
+                />
 
-                <IconAndInputFlex>
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/mail-icon.png")} alt = "Email address icon" />
-                    </IconContainer>
+                <Input elementId = "email"
+                       Icon = {EmailIcon}
+                       type = "text"
+                       placeholder = "Email address*"
+                       value = {email}
+                       onChange = {e => setEmail(e.target.value)}
+                />
 
-                    <InputContainerFlex paddingRight = "8px">
-                        <Input  type = "email"
-                                id = "email" 
-                                placeholder = "Email Address*" 
-                                value = {email}
-                                onChange = {e => setEmail(e.target.value)} />
-                    </InputContainerFlex>
-                </IconAndInputFlex>
+                <Input elementId = "password"
+                       Icon = {PasswordIcon}
+                       type = "password"
+                       placeholder = "Password*"
+                       value = {password}
+                       onChange = {e => setPassword(e.target.value)}
+                />
 
-                <IconAndInputFlex>
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/padlock-icon.png")} alt = "Password icon" />
-                    </IconContainer>
-
-                    <InputContainerFlex paddingRight = "8px">
-                        <Input  type = "password"
-                                id = "password" 
-                                placeholder = "Password*" 
-                                value = {password}
-                                onChange = {e => setPassword(e.target.value)} />
-                    </InputContainerFlex>
-                </IconAndInputFlex>
-
-                <IconAndInputFlex>
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/address-icon.png")} alt = "Address icon" />
-                    </IconContainer>
-
-                    <div style = {{
-                        padding: "16px 0",
-                        display: "flex",
-                        flexGrow: "1",
-                        paddingRight: "8px"
-                    }}>
-                        <textarea id = "address" placeholder = "Address (Changable)" 
-                                  rows = "5" onChange = {e => setAddress(e.target.value)}
-                                  style = {{flexGrow: "1",
-                                    resize: "vertical",
-                                    backgroundColor: "rgb(240, 240, 240)",
-                                    border: "none",
-                                    outline: "none"
-                                  }}></textarea>
-                    </div>
-                </IconAndInputFlex>
+                <TextArea elementId = "address"
+                          Icon = {AddressIcon}
+                          placeholder = "Address (Changable)"
+                          value = {address}
+                          onChange = {e => setAddress(e.target.value)}
+                />
 
                 <Button>Sign up</Button>
-            </FormFlexColumn>
-        </FullHeightCenteredFlex>
+            </FlexForm>
+
+            <CenterChildren flexDirection = "column" 
+                            rowGap = "16px"
+                            style = {{
+                                justifyContent: "flex-start",
+                                padding: "32px"
+                            }}>
+                <h2 style = {{
+                    color: "var(--h2-color)",
+                    fontWeight: "300"
+                }}>
+                    Already have an account?
+                </h2>
+                <Button onClick = {e => navigate("/login")}>Login</Button>
+            </CenterChildren>
+        </CenterChildren>
     );
 };
 

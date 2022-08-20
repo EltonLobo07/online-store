@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginService from "../services/login";
 
-import FullHeightCenteredFlexColumn from "./styled-components/FullHeightCenteredFlexColumn";
-import FormFlexColumn from "./styled-components/FormFlexColumn";
-import IconAndInputFlex from "./styled-components/IconAndInputFlex";
-import IconContainer from "./styled-components/IconContainer";
-import InputContainerFlex from "./styled-components/InputContainerFlex";
+import CenterChildren from "./styled-components/CenterChildren";
+import FlexForm from "./styled-components/FlexForm";
 import Input from "./styled-components/Input";
+
+import { ReactComponent as EmailIcon} from "../images/svgs/mail-icon.svg";
+import { ReactComponent as PasswordIcon } from "../images/svgs/password-icon.svg";
 
 function LogIn() {
     const [email, setEmail] = useState("");
@@ -32,39 +32,54 @@ function LogIn() {
     };
 
     return (
-        <FullHeightCenteredFlexColumn>
-            <h1>Login</h1>
+        <CenterChildren flexDirection = "column"
+                        rowGap = "32px"
+                        style = {{
+                            height: "100%"
+                        }}>
+            <h1 style = {{
+                    color: "var(--my-blue)"
+            }}>
+                Login
+            </h1>
 
-            <FormFlexColumn onSubmit = {handleSubmit} padding = "32px">
-                <IconAndInputFlex>
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/mail-icon.png")} alt = "Email address icon" />
-                    </IconContainer>
-                    
-                    <InputContainerFlex>
-                        <Input  type = "email"  
-                                placeholder = "Email Address*"
-                                value = {email}
-                                onChange = {e => setEmail(e.target.value)} />
-                    </InputContainerFlex>
-                </IconAndInputFlex>
+            <FlexForm onSubmit = {handleSubmit}
+                      padding = "32px"
+                      rowGap = "12px">
+                <Input elementId = "email"
+                       Icon = {EmailIcon}
+                       type = "text"
+                       placeholder = "Email address*"
+                       value = {email}
+                       onChange = {e => setEmail(e.target.value)}
+                />
 
-                <IconAndInputFlex paddingRight = "8px">
-                    <IconContainer height = "50px" padding = "8px">
-                        <img src = {require("../images/padlock-icon.png")} alt = "Password icon" />
-                    </IconContainer>
-
-                    <InputContainerFlex paddingRight = "8px">
-                        <Input  type = "password"  
-                                placeholder = "Password*"
-                                value = {password}
-                                onChange = {e => setPassword(e.target.value)} />
-                    </InputContainerFlex>
-                </IconAndInputFlex>
+                <Input elementId = "password"
+                       Icon = {PasswordIcon}
+                       type = "password"
+                       placeholder = "Password*"
+                       value = {password}
+                       onChange = {e => setPassword(e.target.value)}
+                />
 
                 <Button>Login</Button>
-            </FormFlexColumn>
-        </FullHeightCenteredFlexColumn>
+            </FlexForm>
+
+            <CenterChildren flexDirection = "column" 
+                            rowGap = "16px"
+                            style = {{
+                                justifyContent: "flex-start",
+                                padding: "32px"
+                            }}>
+                <h2 style = {{
+                    color: "var(--h2-color)",
+                    fontWeight: "300"
+                }}>
+                    Haven't signed up yet?
+                </h2>
+                <Button onClick = {e => navigate("/signup")}>Create new account</Button>
+            </CenterChildren>
+        </CenterChildren>
     );
 };
 
