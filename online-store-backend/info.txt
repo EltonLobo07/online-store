@@ -1,194 +1,251 @@
 ROUTE HTTP_METHOD
-	INPUT
-		Extra information (Optional)
+	INPUT_OBJECT
 
-	OUTPUT
-		Extra information (Optional)
+	OUTPUT_OBJECT
 
-	NOTE (Optional)
-----------------------------------------------------------------------------------------------------
-CATEGORIES
-----------------------------------------------------------------------------------------------------
-/api/categories	GET
-	{}
+	COMMENTS (optional)
+---------------------------------------------------------------------------------------------------
+/api/categories GET
+	NONE
 
-	[{name: "categoryName", id: "uniqueString"}, ...]
-----------------------------------------------------------------------------------------------------
-LOGIN
-----------------------------------------------------------------------------------------------------
-/api/login	POST
-	{email: "example@gmail.com", password: "somePassword"}
-		email    - Required
-		password - Required
+	[{name, id}, ...]
+		id and name data type - String 
+---------------------------------------------------------------------------------------------------
+/api/login POST
+	{ email, password }
+		email and password data type - String
 
-	{token: "JWTToken", id: "userId"}
-		token - Contains user's email and id information and is signed using a secret key
-----------------------------------------------------------------------------------------------------
-USER
-----------------------------------------------------------------------------------------------------
-/api/users POST
-	{email: "example@gmail.com", password: "somePassword"}
-		email    - Required
-		password - Required, should be at least 5 characters long
-
-	{id: "userId", email: "example@gmail.com", shoppingCartProducts: {}}
-----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartProducts POST
-	
-	-Authorization header field: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-{productId}
-		productId - Required
-
-	No output, only status code returned
-		200 - If already present in the shopping cart
-		201 - If added to the user's shopping cart
-	
-	The userId from the URL and the userId from the signed token should match
-----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartProducts GET
-
-	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-
-	{"productId1": 12, ...}
-----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartProducts/ProductId DELETE
-
-	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-
-	No output, only status code returned
-		204 - If all the operations were performed successfully
-
-	The userId from the URL and the userId from the signed token should match
-----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartProducts DELETE
-
-	Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-
-	No output, only status code returned
-		204 - If all the operations were performed successfully
-
-	-The userId from the URL and the userId from the signed token should match
-	-This route is used to reset the shopping cart of the user
-----------------------------------------------------------------------------------------------------
-/api/users/userId/shoppingCartProducts/ProductId DELETE
-
-	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-{quantity: 12}
-		-If quantity cannot be converted to an integer, operation is unsucessful
-		-Math.max(Math.floor(quanity), 1) is used as quanity value to be stored in the database
-
-	No output, only status code returned
-		204 - If all the operations were performed successfully
-
-	The userId from the URL and the userId from the signed token should match
-----------------------------------------------------------------------------------------------------
-PRODUCTS
-----------------------------------------------------------------------------------------------------
-/api/products POST
-	
-	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-{
-		category: "categoryName",
-
-	 }
-	 	category    - Required
-		rating      - Optional, may contain 'rate' and 'count' fields
-		title       - Required
-		price       - Required
-		description - Optional
-		image       - Optional (Should be a URL if provided) 
-
-	{
-		title: "ProductTitle",
-		category: "uniqueStringRepresentingCategoryId",
-		price: 10000,
-		description: "",
-		image: "",
-		rating: {
-			rate: 0,
-			count: 0
-		},
-		id: "uniqueStringRepresentingProductId"
-	}
-
-	-Only admin of the website (email === "admin@company.com") can use this route
-	-The 'description', 'image', 'rating.rate', 'rating.count' default values are presented in 
-	 the output section above
-----------------------------------------------------------------------------------------------------
-/api/products GET
-	
-	{}
-
-	[
-		{
-			rating: {
-				rate: 0,
-				count: 0
-			},
-			title: "ProductTitle",
-			price: 1000,
-			description: "",
-			category: {
-				name: "categoryName",
-				id: "uniqueStringRepresentingCategoryId"
-			},
-			image: "",
-			id: "uniqueStringRepresentingProductId"
-		}, 
-		...
-	]
-
-	The 'description', 'image', 'rating.rate', 'rating.count' default values are presented in 
-	 the output section above
-----------------------------------------------------------------------------------------------------
-/api/products/productId GET
-
-	{}
-
-	Same output as /api/products GET but only outputs matching product object 	
-----------------------------------------------------------------------------------------------------
-ORDERS
-----------------------------------------------------------------------------------------------------
+	{token, id, name}
+		token, id, name data type - String
+		token payload - {email, id}
+---------------------------------------------------------------------------------------------------
 /api/orders POST
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
 
-	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-{
-		order: [
-			{item: "itemId", quantity: 1},
-			...
-		]
-	 }
-	 	item    - Required
-		quanity - Required
-
-	No output, only status code returned
-		201 - If added to the user's shopping cart
-----------------------------------------------------------------------------------------------------
-/api/orders GET
-
-	-Authorization header: "Bearer TOKEN_RECEIVED_DURING_LOGIN"
-	-{}
+	NONE
+	If successful, status code: 201
+---------------------------------------------------------------------------------------------------
+/api/orders/admin GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
 
 	[
 		{
 			user: {
-            email: "example@gmail.com",
-            id: "userId"
-        	},
-        	items: [
+				{email, id}
+			},
+			products: [
 				{
-					item: {
-						title: "productTitle",
-						price: 1000,
-						category: "categoryId",
-						id: "itemId"
+					product: {
+						title, price, category, id
 					},
-					quantity: 12
-				},
-				...
-        	],
-        	date: "2022-08-10T08:52:04.514Z",
-        	id: "orderId"
-		},
-		...
+					quantity
+				}, ...
+			],
+			date,
+			address, 
+			id
+		}, ...
 	]
+	email, user.id, title, category, products.product.id, date, address, id data type - String
+	price, quantity data type - Number
+
+	Only the admin can use this route after logging in
+	Admin is the one having email address - "admin@company.com"
+---------------------------------------------------------------------------------------------------
+/api/orders/user GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	[
+		{
+			user,
+			products: [
+				{
+					product: {
+						title, price, id
+					},
+					quantity
+				}, ...
+			],
+			date,
+			address,
+			id
+		}, ...
+	]
+	user, title, products.product.id, date, address, id data type - String
+	price, quantity data type - Number
+---------------------------------------------------------------------------------------------------
+/api/products GET
+	NONE
+
+	[
+		{
+			rating: {
+				rate, count
+			},
+			title,
+			price,
+			description,
+			category: {
+				id, name
+			},
+			image,
+			id
+		}, ...
+	]
+	title, description, category.id, name, image, id data type - String
+	rate, count, price data type - Number
+---------------------------------------------------------------------------------------------------
+/api/products/:productId GET
+	NONE
+
+	{
+		rating: {
+			rate, count
+		},
+		title,
+		price,
+		description,
+		category: {
+			id, name
+		},
+		image,
+		id
+	}
+	title, description, category.id, name, image, id data type - String
+	rate, count, price data type - Number
+---------------------------------------------------------------------------------------------------
+/api/products POST
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	{
+		title, 
+		price, 
+		description, 
+		category, 
+		image, 
+		rating: {rate, count}
+	}
+	title, description, category, image data type - String
+	price, rate, count data type - Number
+	Required fields - title, price, category
+	Default values of non-required fields, 
+		image: ""
+		rate: 0
+		count: 0
+		description: ""
+	0 <= rate <= 5, count >= 0, price >= 0
+	If rate > 0, count > 0 always
+	If there is a new category name, the new category is added to the database
+
+	The returned object is the same as the returned object of the route: /api/products/:productId GET
+---------------------------------------------------------------------------------------------------
+/api/users POST
+	{
+		email,
+		password,
+		name,
+		address
+	}
+	email, password, name, address data type - String
+	Required fields: email, password, name
+	Default values of non-required fields,
+		address: ""
+	password should be at least 5 characters long
+	name should be at least 2 characters long
+
+	{
+		email, 
+		name,
+		address,
+		shoppingCartProducts: {},
+		id
+	}
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts POST
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	{
+		productId
+	}
+	productId data type - String
+	Required fields: productId
+
+	Status code:
+		200 if product was added to the shoppingCart
+		201 if product was already present in the shoppingCart
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts/detailed GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	[
+		{
+			product: {
+				id, 
+				title,
+				price,
+				description,
+				category,
+				image,
+				rating: {rate, count}
+			},
+			quantity
+		}, ...
+	]
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE	
+
+	{productId1: quantity, ...}
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts/:productId DELETE
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	Status code: 204
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts DELETE
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	Status code: 204
+---------------------------------------------------------------------------------------------------
+/api/users/:userId/shoppingCartProducts/:productId PATCH
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	{quantity}
+	quantity data type - Number
+	Required fields: quantity
+	quantityNum = floor(max(quantityNum, 0))
+
+	quantityNum (Integer)
+	quantityNum >= 0 
+---------------------------------------------------------------------------------------------------
+api/users/:userId/shoppingCartProducts/:productId GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	quantityNum (Integer)
+	quantityNum >= 0 
+---------------------------------------------------------------------------------------------------
+api/users/:userId/shoppingCartProducts/:productId/isProductPresent GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	isProductPresent (Boolean)
+---------------------------------------------------------------------------------------------------
+api/users/:userId/address GET
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	NONE
+
+	userAddress (String)
+---------------------------------------------------------------------------------------------------
+api/user/:userId/address PUT
+	Authorization header set to - "Bearer <TOKEN_RECEIVED_AFTER_LOGIN>"
+	{address}
+		address data type - String
+		Required fields:
+			address
+
+	Status code: 204

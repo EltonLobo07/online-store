@@ -3,12 +3,10 @@ const { getMissingFieldString } = require("../utils/helpers");
 
 const productSchema = new mongoose.Schema({
     title: {
-        type: String,
-        required: [true, getMissingFieldString("title")]
+        type: String
     },
     price: {
-        type: Number,
-        required: [true, getMissingFieldString("price")]
+        type: Number
     },
     description: {
         type: String,

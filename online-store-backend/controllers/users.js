@@ -3,19 +3,19 @@ const User = require("../models/user");
 const Product = require("../models/product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY, PASSWORD_LENGTH } = require("../utils/config");
-const { getUserIfAuthorized, idMatchCheck, emailAndPasswCheck } = require("../utils/middlewares");
+const { PASSWORD_LENGTH, NAME_LENGTH } = require("../utils/config");
+const { getUserIfAuthorized, idMatchCheck, customValidator } = require("../utils/middlewares");
 const axios = require("axios");
-const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
+const { getErrorMsgObj, createUserCheckArr, getSmallLengthString } = require("../utils/helpers");
 
-router.post("/", emailAndPasswCheck, async (req, res, next) => {
+router.post("/", customValidator(createUserCheckArr()), async (req, res, next) => {
     const { email, password, name, address } = req.body;
 
-    if (name === undefined)
-        return res.status(400).json(getErrorMsgObj(getMissingFieldString("name")));
-
     if (password.length < PASSWORD_LENGTH)
-            return res.status(400).json(getErrorMsgObj(`Password should be at least ${PASSWORD_LENGTH} characters long`));
+            return res.status(400).json(getErrorMsgObj(getSmallLengthString("password", PASSWORD_LENGTH)));
+
+    if (name.length < NAME_LENGTH)
+            return res.status(400).json(getErrorMsgObj(getSmallLengthString("name", NAME_LENGTH)));
 
     try {
         const existingUser = await User.findOne({email});
@@ -40,11 +40,8 @@ router.post("/", emailAndPasswCheck, async (req, res, next) => {
     }
 });
 
-router.post("/:userId/shoppingCartProducts/", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+router.post("/:userId/shoppingCartProducts/", getUserIfAuthorized, idMatchCheck, customValidator([[true, "string", "productId"]]), async (req, res, next) => {
     const { productId } = req.body;
-
-    if (productId === undefined)
-        return res.status(400).json(getErrorMsgObj(getMissingFieldString("productId")));
 
     try {
         const user = await User.findOne({_id: req.decodedLoginObj.id});
@@ -81,8 +78,22 @@ router.get("/:userId/shoppingCartProducts/detailed", getUserIfAuthorized, idMatc
         {
             const curProduct = products[i];
 
-            if (shoppingCartProducts.get(String(curProduct._id)) !== undefined)
-                result.push(curProduct);
+            const curProductIdString = String(curProduct._id);
+
+            if (shoppingCartProducts.get(curProductIdString) !== undefined)
+            {
+                result.push({
+                    product: {
+                    id: curProductIdString, 
+                    title: curProduct.title,
+                    price: curProduct.price,
+                    description: curProduct.description,
+                    category: curProduct.category,
+                    image: curProduct.image,
+                    rating: curProduct.rating},
+                    quantity: shoppingCartProducts.get(curProductIdString)
+                });
+            }
         }
 
         res.json(result);
@@ -129,19 +140,9 @@ router.delete("/:userId/shoppingCartProducts/", getUserIfAuthorized, idMatchChec
     }
 });
 
-router.patch("/:userId/shoppingCartProducts/:productId", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+router.patch("/:userId/shoppingCartProducts/:productId", getUserIfAuthorized, idMatchCheck, customValidator([[true, "number", "quantity"]]), async (req, res, next) => {
     try {
-        const quantityStr = req.body.quantity;
-
-        if (quantityStr === undefined)
-            return res.status(400).json(getErrorMsgObj(getMissingFieldString("quantity")));
-
-        let quantityNum = Number(quantityStr);
-
-        if (isNaN(quantityNum))
-            return res.status(400).json(getErrorMsgObj("'quantity' field should contain an integer value"));
-
-        quantityNum = Math.max(Math.floor(quantityNum), 0);
+        const quantityNum = Math.max(Math.floor(req.body.quantity), 0);
 
         const user = await User.findOne({_id: req.decodedLoginObj.id});
 
@@ -200,11 +201,8 @@ router.get("/:userId/address", getUserIfAuthorized, idMatchCheck, async (req, re
     }
 });
 
-router.put("/:userId/address", getUserIfAuthorized, idMatchCheck, async (req, res, next) => {
+router.put("/:userId/address", getUserIfAuthorized, idMatchCheck, customValidator([[true, "string", "address"]]), async (req, res, next) => {
     const { address } = req.body;
-
-    if (!address === undefined)
-        return res.status(400).json(getErrorMsgObj(getMissingFieldString("address")));
 
     try {
         const user = await User.findOne({_id: req.decodedLoginObj.id});

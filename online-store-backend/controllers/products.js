@@ -1,14 +1,11 @@
 const Product = require("../models/product");
 const Category = require("../models/category");
-const { getUserIfAuthorized, adminCheck } = require("../utils/middlewares");
-const { getErrorMsgObj, getMissingFieldString } = require("../utils/helpers");
+const { getUserIfAuthorized, adminCheck, customValidator } = require("../utils/middlewares");
+const { createProductCheckArr } = require("../utils/helpers");
 const router = require("express").Router();
 
-router.post("/", getUserIfAuthorized, adminCheck, async (req, res, next) => {
+router.post("/", getUserIfAuthorized, adminCheck, customValidator(createProductCheckArr()), async (req, res, next) => {
     try {
-        if (req.body.category === undefined)
-            return res.status(400).json(getErrorMsgObj(getMissingFieldString("category")));
-
         const productCategory = req.body.category.toLowerCase();
         const category = await Category.findOne({name: productCategory}); 
 
@@ -39,7 +36,7 @@ router.post("/", getUserIfAuthorized, adminCheck, async (req, res, next) => {
 
         const product = new Product({
             title: newProduct.title,
-            price: newProduct.price,
+            price: Math.max(newProduct.price, 0),
             description: newProduct.description,
             category: newProduct.category,
             image: newProduct.image,
@@ -70,10 +67,12 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
     try {
-        const product = await Product.findOne({_id: req.params.id}).populate("category");
+        const productId = req.params.id;
+
+        const product = await Product.findOne({_id: productId}).populate("category");
 
         if (product === null)
-            return res.status(404).json({error: "Product with the given ID not found"});
+            return res.status(404).json({error: `Product with the ID - '${productId}' not found`});
 
         res.json(product);
     }

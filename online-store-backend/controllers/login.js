@@ -3,10 +3,10 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../utils/config");
-const { emailAndPasswCheck } = require("../utils/middlewares");
+const { customValidator } = require("../utils/middlewares");
 const { getErrorMsgObj } = require("../utils/helpers"); 
 
-router.post("/", emailAndPasswCheck, async (req, res, next) => {
+router.post("/", customValidator([[true, "string", "email"], [true, "string", "password"]]), async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
