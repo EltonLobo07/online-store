@@ -1,37 +1,7 @@
+import React from "react";
 import PropTypes from "prop-types";
-import StyledButton from "./Button";
-import styled from "styled-components";
 import userService from "../services/users";
 import { useNavigate } from "react-router-dom";
-
-const StyledProduct = styled.div`
-    height: 350px;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 8px;
-    padding: 8px;
-
-    background-color: white;
-
-    border-radius: 4px;
-    border: 1px solid rgba(229, 231, 235);
-
-    div:nth-child(2) {
-        border-top: 1px solid rgba(229, 231, 235);
-        padding-top: 8px;
-        height: 100px;
-        overflow: hidden;
-    }
-
-    > div > img {
-        width: 100%;
-        height: 150px;
-
-        object-fit: contain;
-    }
-`;
 
 function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
     const inTheCart = productsInTheCart[product.id] !== undefined;
@@ -67,15 +37,15 @@ function Product({ user, product, productsInTheCart, setProductsInTheCart }) {
     };
 
     return (
-        <StyledProduct>
+        <div style = {{border: "1px solid black"}}>
             <div>
-                <img src = {product.image} alt = {product.title} />
+                <img src = "" alt = {product.title} />
             </div>
             <div style = {{fontWeight: 600}}>{product.title}</div>
             <div>${product.price}</div>
-            <StyledButton onClick = {handleCartClick} inTheCart = {inTheCart}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</StyledButton>
-            <StyledButton onClick = {handleMoreDetailsClick}>More details</StyledButton>
-        </StyledProduct>
+            <button onClick = {handleCartClick}>{inTheCart ? "Remove from cart" : "Add to cart"}</button>
+            <button onClick = {handleMoreDetailsClick}>More details</button>
+        </div>
     );
 };
 

@@ -1,27 +1,6 @@
+import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import OrderProduct from "./OrderProduct";
-
-const StyledOrder = styled.div`
-    border: 1px solid;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-
-    .table-container table, .table-container th, .table-container td {
-        border: 1px solid;
-    }
-
-    .table-container table {
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    .table-container {
-        display: flex;
-        justify-content: center;
-    }
-`;
 
 function calcTotalPrice(products) {
     return products.reduce((prevVal, curObj) => prevVal + curObj.product.price * curObj.quantity, 0);
@@ -31,7 +10,7 @@ function Order({ order, orderNum }) {
     const dateObj = new Date(order.date);
 
     return (
-        <StyledOrder>
+        <div>
             <div>Order Id: {order.id}</div>
 
             <div>
@@ -63,7 +42,7 @@ function Order({ order, orderNum }) {
             <div>Time: {dateObj.toTimeString()}</div>
 
             <div>Address: {order.address}</div>
-        </StyledOrder>
+        </div>
     );
 };
 

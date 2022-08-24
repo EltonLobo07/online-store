@@ -8,6 +8,7 @@ const logger = require("./utils/logger");
 const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
 const { unknownEndpointHandler, errorHandler, requestLogger } = require("./utils/middlewares");
+const cors = require("cors");
 
 // Connect to your DB here
 mongoose.connect(DB_URI)
@@ -15,6 +16,8 @@ mongoose.connect(DB_URI)
         .catch(err => logger.error(err));
 
 const app = express();
+
+app.use(cors({origin: "*"}));
 
 app.use(express.json()); // Sets request's body field to received JS object
 

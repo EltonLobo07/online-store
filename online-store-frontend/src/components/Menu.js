@@ -1,18 +1,6 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom"; 
-import styled from "styled-components";
 import PropTypes from "prop-types";
-
-const StyledMenu = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    > a 
-    {
-        text-decoration: none;
-        color: white;
-    }
-`;
 
 function Menu({ user, setUser }) {
     const navigate = useNavigate();
@@ -24,7 +12,7 @@ function Menu({ user, setUser }) {
     };
 
     return (
-        <StyledMenu>
+        <div>
             <Link to = "/">Home</Link>
             <Link to = "/products">Products</Link>
             <Link to = "/checkout">Checkout</Link>
@@ -33,7 +21,7 @@ function Menu({ user, setUser }) {
                         {`${user.name}`}
                     </button> :
                     <Link to = "/login">LogIn</Link>}
-        </StyledMenu>
+        </div>
     );
 };
 

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import productService from "../services/products";
-import StyledButton from "./Button";
 import { useOutletContext } from "react-router-dom";
 import userService from "../services/users";
 
@@ -47,7 +46,7 @@ function DetailedProduct() {
             <img src = {product.image} alt = "product img" width = "100px" height = "100px" />
             <h3>{product.title}</h3>
             <div>Price: <span>$ {product.price}</span></div>
-            <StyledButton onClick = {handleCartClick} inTheCart = {inTheCart}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</StyledButton>
+            <button onClick = {handleCartClick}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</button>
         </div>
     );
 };

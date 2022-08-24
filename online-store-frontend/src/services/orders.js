@@ -1,7 +1,7 @@
 import axios from "axios";
 import userService from "./users";
 
-const baseUrl = "/api/orders";
+const baseUrl = "http://localhost:3001/api/orders";
 
 async function order(token, userId) {
     const response = await axios.post(baseUrl, null, {headers: {Authorization: `Bearer ${token}`}});

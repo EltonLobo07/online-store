@@ -1,37 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Product from "./Product";
-import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import productService from "../services/products";
 import userService from "../services/users";
 import categoryService from "../services/categories";
-
-const StyledProducts = styled.div`
-    // To center the header on viewport with large width 
-    display: flex;
-    justify-content: center;
-
-    > div {
-        width: min(100%, 1000px);
-
-        background-color: rgba(229, 231, 235, 0.5);
-        
-        display: grid;
-        grid-template: 1fr / repeat(auto-fit, 256px);
-        justify-content: center;
-        padding: 32px;
-        gap: 32px;
-    }
-
-    .menu-container {
-        text-align: center;
-        grid-column-start: 1;
-        grid-column-end: -1;
-        display: flex;
-        flex-direction: column;
-        row-gap: 16px;
-    }
-`;
 
 function myFilter(products, category, keywordSearch, minPrice, maxPrice) {
     const lCSearchKeyword = keywordSearch.toLowerCase();
@@ -134,14 +106,14 @@ function Products() {
     mySort(filteredProducts, sortByPrice); // In-place sorting 
 
     return (
-        <StyledProducts>
+        <div>
             <div>
-                <div className = "menu-container">
-                    <div className = "numProductsDisplay">
+                <div>
+                    <div>
                         {`Number of products in the cart: ${Object.keys(productsInTheCart).length}`}
                     </div>
 
-                    <div className = "numProductsDisplay">
+                    <div>
                         <label htmlFor = "keywordSearch">keyword search: </label>
                         <input type = "text" value = {searchKeyword} onChange = {handleSearchKeywordChange} />
 
@@ -175,7 +147,7 @@ function Products() {
                                                           productsInTheCart = {productsInTheCart}
                                                           setProductsInTheCart = {setProductsInTheCart} />)}
             </div>
-        </StyledProducts>
+        </div>
     );
 };
 

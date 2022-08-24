@@ -1,29 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import styled from "styled-components";
 import orderService from "../services/orders";
 import Order from "./Order";
-
-const StyledOrders = styled.div` 
-    display: flex;
-    justify-content: center;
-
-    > div {
-        width: min(100%, 1000px);
-
-        background-color: rgba(229, 231, 235, 0.5);
-
-        display: flex;
-        flex-direction: column;
-        row-gap: 16px;
-        align-items: center;
-        padding: 10px;
-    }
-
-    > div > div {
-        width: max(300px, 50%);
-    } 
-`;
 
 let navigateFunc;
 
@@ -49,19 +27,19 @@ function Orders() {
 
     if (orders.length === 0) // User is logged in
         return (
-            <StyledOrders>
+            <div>
                 <div>
                     No orders
                 </div>
-            </StyledOrders>
+            </div>
         );
 
     return (
-        <StyledOrders>
+        <div>
             <div>
                 {orders.map((order, orderNum) => <Order key = {order.id} order = {order} orderNum = {orderNum} />)}
             </div>
-        </StyledOrders>
+        </div>
     );
 };
 

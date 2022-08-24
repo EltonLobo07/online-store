@@ -1,23 +1,6 @@
-import styled from "styled-components";
-import Button from "./Button";
 import PropTypes from "prop-types";
 import userService from "../services/users";
 import React, { useEffect, useState } from "react";
-
-const StyledShoppingCartItem = styled.div`
-    font-size: 1.2rem;
-    padding: 10px;
-    width: minmax(300, 500);
-    background-color: ${props => props.quantity ? "lightgreen" : "#f78279"};
-
-    > input {
-        width: 50px;
-    }
-
-    span {
-        font-weight: 700;
-    }
-`;
 
 function toggleInputAndFocus(e) {
     e.target.disabled = !e.target.disabled;
@@ -62,14 +45,14 @@ function ShoppingCartProduct({ product, user, productsToBuy, setProductsToBuy, t
     }, []);
 
     return (
-        <StyledShoppingCartItem quantity = {quantity}>
+        <div>
             <div>Title: <span>{product.title}</span></div>
             <label htmlFor = "quantity">Quantity: </label>
             <input type = "number" id = "quantity" value = {String(quantity)} onChange = {handleQuantityChange} />
             <div>Price: $({quantity} x {product.price}) = <span>${(quantity * product.price).toFixed(2)}</span></div>
             <br />
-            <Button onClick = {handleClick}>delete</Button>
-        </StyledShoppingCartItem>
+            <button onClick = {handleClick}>delete</button>
+        </div>
     );
 };
 

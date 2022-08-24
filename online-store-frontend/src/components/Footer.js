@@ -1,15 +1,7 @@
-import styled from "styled-components";
-
-const StyledFooter = styled.div`
-    padding: 16px 0px;
-    display: flex;
-    justify-content: center;
-    background-color: black;
-    color: white;
-`;
+import React from "react";
 
 function Footer() {
-    return <StyledFooter>Copyright © Brand name here</StyledFooter>;
+    return <div>Copyright © Brand name here</div>;
 };
 
 export default Footer;

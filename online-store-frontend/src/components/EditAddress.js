@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import userService from "../services/users";
-import StyledButton from "./Button";
 
 function EditAddress({ user }) {
     const [address, setAddress] = useState("");
@@ -30,7 +29,7 @@ function EditAddress({ user }) {
 
     return (
         <div>
-            <StyledButton onClick = {handleClick}>{editAddress ? "Save " : "Edit "} address</StyledButton>
+            <button onClick = {handleClick}>{editAddress ? "Save " : "Edit "} address</button>
             <textarea disabled = {!editAddress} value = {address} onChange = {e => setAddress(e.target.value)}></textarea>
         </div>
     );
