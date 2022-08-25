@@ -106,47 +106,45 @@ function Products() {
     mySort(filteredProducts, sortByPrice); // In-place sorting 
 
     return (
-        <div>
+        <div className = "flex-grow">
             <div>
                 <div>
-                    <div>
-                        {`Number of products in the cart: ${Object.keys(productsInTheCart).length}`}
-                    </div>
-
-                    <div>
-                        <label htmlFor = "keywordSearch">keyword search: </label>
-                        <input type = "text" value = {searchKeyword} onChange = {handleSearchKeywordChange} />
-
-                        <label htmlFor = "sortByPrice">Sort by price: </label>
-                        <select id = "sortByPrice" onChange = {handleSortByPriceChange} >
-                            <option value = {INITIAL_SORT_BY_PRICE_STATE}>{INITIAL_SORT_BY_PRICE_STATE}</option>
-                            <option value = "increasing">increasing</option>
-                            <option value = "decreasing">decreasing</option>
-                        </select>
-
-                        <label htmlFor = "category">Category: </label>
-                        <select id = "category" onChange = {handleCategoryChange}>
-                            <option value = {INITIAL_CUR_CATEGORY_STATE}>{INITIAL_CUR_CATEGORY_STATE}</option>
-                            {categories.map(category => <option key = {category.id} value = {category.name}>{category.name}</option>)}
-                        </select>
-
-                        <br />
-                        <br />
-
-                        <label htmlFor="minPrice">Minimum price: </label>
-                        <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} />
-                        
-                        <label htmlFor="maxPrice">Maximum price: </label>
-                        <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} />
-                    </div>
+                    {`Number of products in the cart: ${Object.keys(productsInTheCart).length}`}
                 </div>
 
-                {filteredProducts.map(product => <Product key = {product.id} 
-                                                          product = {product}
-                                                          user = {user}
-                                                          productsInTheCart = {productsInTheCart}
-                                                          setProductsInTheCart = {setProductsInTheCart} />)}
+                <div>
+                    <label htmlFor = "keywordSearch">keyword search: </label>
+                    <input type = "text" value = {searchKeyword} onChange = {handleSearchKeywordChange} />
+
+                    <label htmlFor = "sortByPrice">Sort by price: </label>
+                    <select id = "sortByPrice" onChange = {handleSortByPriceChange} >
+                        <option value = {INITIAL_SORT_BY_PRICE_STATE}>{INITIAL_SORT_BY_PRICE_STATE}</option>
+                        <option value = "increasing">increasing</option>
+                        <option value = "decreasing">decreasing</option>
+                    </select>
+
+                    <label htmlFor = "category">Category: </label>
+                    <select id = "category" onChange = {handleCategoryChange}>
+                        <option value = {INITIAL_CUR_CATEGORY_STATE}>{INITIAL_CUR_CATEGORY_STATE}</option>
+                        {categories.map(category => <option key = {category.id} value = {category.name}>{category.name}</option>)}
+                    </select>
+
+                    <br />
+                    <br />
+
+                    <label htmlFor="minPrice">Minimum price: </label>
+                    <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} />
+                    
+                    <label htmlFor="maxPrice">Maximum price: </label>
+                    <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} />
+                </div>
             </div>
+
+            {filteredProducts.map(product => <Product key = {product.id} 
+                                                        product = {product}
+                                                        user = {user}
+                                                        productsInTheCart = {productsInTheCart}
+                                                        setProductsInTheCart = {setProductsInTheCart} />)}
         </div>
     );
 };

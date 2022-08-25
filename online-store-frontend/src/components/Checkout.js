@@ -54,17 +54,17 @@ function Checkout() {
     // useEffect will run only once anyways
 
     if (user === undefined) // User is not logged in
-        return null;
+        return <div className = "flex-grow"></div>;
 
     if (productsToBuy.length === 0) // User is logged in
         return (
-            <div>
+            <div className = "flex-grow">
                 <div>No products in the cart</div>
             </div>
         );
 
     return (
-        <div>
+        <div className = "flex-grow">
             <div>
                 {productsToBuy.map(product => <ShoppingCartProduct key = {product.id}
                                                                    product = {product}

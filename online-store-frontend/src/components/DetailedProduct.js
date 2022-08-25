@@ -39,10 +39,10 @@ function DetailedProduct() {
     }, [user, id]);
 
     if (product === null)
-        return null;
+        return <div className = "flex-grow"></div>;
 
     return (
-        <div>
+        <div className = "flex-grow">
             <img src = {product.image} alt = "product img" width = "100px" height = "100px" />
             <h3>{product.title}</h3>
             <div>Price: <span>$ {product.price}</span></div>

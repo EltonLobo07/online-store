@@ -23,11 +23,11 @@ function Orders() {
     }, [user]);
 
     if (user === undefined) // User is not logged in
-        return null;
+        return <div className = "flex-grow"></div>;
 
     if (orders.length === 0) // User is logged in
         return (
-            <div>
+            <div className = "flex-grow">
                 <div>
                     No orders
                 </div>
@@ -35,7 +35,7 @@ function Orders() {
         );
 
     return (
-        <div>
+        <div className = "flex-grow">
             <div>
                 {orders.map((order, orderNum) => <Order key = {order.id} order = {order} orderNum = {orderNum} />)}
             </div>
