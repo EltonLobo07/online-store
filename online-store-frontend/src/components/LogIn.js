@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginService from "../services/login";
+import Input from "./Input";
 
 function LogIn() {
     const [email, setEmail] = useState("");
@@ -24,28 +25,25 @@ function LogIn() {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
+        <div className = "bg-gray-50 flex flex-col justify-center items-center gap-y-28 py-12">
+            <div className = "flex flex-col gap-y-10">
+                <h1 className = "text-center text-3xl font-semibold text-purple-700">Login</h1>
 
-            <form onSubmit = {handleSubmit}>
-                <div>
-                    <label htmlFor = "email">Email</label>
-                    <input id = "email" type = "text" placeholder = "Email address*" value = {email} onChange = {e => setEmail(e.target.value)} />
-                </div>
+                <form onSubmit = {handleSubmit} className = "border p-8 sm:p-16 flex flex-col gap-y-4 bg-white rounded-lg shadow-xl shadow-gray-300">
 
-                <div>
-                    <label htmlFor = "password">Password</label>
-                    <input id = "password" type = "password" placeholder = "Password*" value = {password} onChange = {e => setPassword(e.target.value)} />
-                </div>
+                    <Input inputId = "email" inputLabel = "Email" isRequired = {true} type = "text" placeholder = "Your email address" value = {email} onChange = {e => setEmail(e.target.value)} />
 
-                <button>Login</button>
-            </form>
+                    <Input inputId = "password" inputLabel = "Password" isRequired = {true} type = "password" placeholder = "Your password" value = {password} onChange = {e => setPassword(e.target.value)} />
 
-            <div>
-                <h2>
+                    <button className = "btn">Login</button>
+                </form>
+            </div>
+
+            <div className = "flex flex-col gap-y-12">
+                <h2 className = "text-2xl text-gray-500">
                     Haven't signed up yet?
                 </h2>
-                <button onClick = {e => navigate("/signup")}>Create new account</button>
+                <button onClick = {e => navigate("/signup")} className = "btn">Create new account</button>
             </div>
         </div>
     );
