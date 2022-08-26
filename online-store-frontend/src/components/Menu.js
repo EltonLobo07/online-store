@@ -23,23 +23,23 @@ function Menu({ user, setUser }) {
 
     return (
         <div className = "hidden md:flex items-center gap-x-10 relative">
-            <Link to = "/" onClick = {closeDropDown} className = "hover:bg-purple-600 p-1">
+            <Link to = "/" onClick = {closeDropDown} className = "border border-purple-700 hover:border-white p-1">
                 Home
             </Link>
 
-            <Link to = "/products" onClick = {closeDropDown} className = "hover:bg-purple-600 p-1">
+            <Link to = "/products" onClick = {closeDropDown} className = "border border-purple-700 hover:border-white p-1">
                 Products
             </Link>
 
-            <Link to = "/checkout" onClick = {closeDropDown} className = "hover:bg-purple-600 p-1">
+            <Link to = "/checkout" onClick = {closeDropDown} className = "border border-purple-700 hover:border-white p-1">
                 Checkout
             </Link>
 
-            <button onClick = {toggleDropDown} className = "hover:bg-purple-600 p-1">
+            <button onClick = {toggleDropDown} className = "border border-purple-700 hover:border-white p-1">
                 User
             </button>
 
-            <div className = {`${boxHidden ? "hidden" : "block"} absolute top-10 right-0 flex flex-col text-purple-700 bg-white border border-purple-700 border-t-0`}>
+            <div className = {`${boxHidden ? "hidden" : "block"} absolute top-10 right-0 flex flex-col text-purple-700 bg-white border border-purple-700 border-t-0 w-max`}>
                 {
                     user ? 
                         <>

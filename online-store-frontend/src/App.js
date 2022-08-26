@@ -14,7 +14,7 @@ function App() {
     return (
         <div className = "h-full flex flex-col">
             <Header user = {user} setUser = {setUser} />
-            <div className = "h-14 w-full shrink-0">This is some block</div>
+            <div className = "h-12 w-full shrink-0"></div>
             <Outlet context = {[user, setUser]} />
             <Footer />
         </div>
