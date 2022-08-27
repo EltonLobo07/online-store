@@ -108,12 +108,12 @@ function Products() {
 
     return (
         <div className = "flex-grow flex flex-col">
-            <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white">
+            <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
                 {user ? `Hi ${user.name}, ` : null}
                 {`Cart : ${Object.keys(productsInTheCart).length}`}
             </div>
 
-            <div className = "flex flex-col gap-y-5 p-5 w-3/4 max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+            <div className = "flex flex-col gap-y-10 p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
                 <div className = "bg-white flex flex-col gap-y-2 py-4 items-center rounded-lg shadow-sm shadow-gray-300">
                     <div className = "flex flex-col gap-y-1">
                         <label htmlFor = "keywordSearch" className = "text-purple-700">
@@ -167,7 +167,7 @@ function Products() {
                     </div>
                 </div>
 
-                <div className = "grid">
+                <div className = "grid grid-rows-[300px] auto-rows-[300px] grid-cols-[repeat(auto-fit,275px)] justify-center gap-x-4 gap-y-4">
                     {filteredProducts.map(product => <Product key = {product.id} 
                                                                 product = {product}
                                                                 user = {user}
