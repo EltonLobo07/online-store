@@ -167,13 +167,18 @@ function Products() {
                     </div>
                 </div>
 
-                <div className = "grid grid-rows-[300px] auto-rows-[300px] grid-cols-[repeat(auto-fit,275px)] justify-center gap-x-4 gap-y-4">
-                    {filteredProducts.map(product => <Product key = {product.id} 
-                                                                product = {product}
-                                                                user = {user}
-                                                                productsInTheCart = {productsInTheCart}
-                                                                setProductsInTheCart = {setProductsInTheCart} />)}
-                </div>
+                {
+                    filteredProducts.length == 0 ? <div className = "flex justify-center text-lg text-purple-700">No product found</div> : (
+                        <div className = "grid grid-rows-[300px] auto-rows-[300px] grid-cols-[repeat(auto-fit,275px)] justify-center gap-x-4 gap-y-4"> 
+                            {filteredProducts.map(product => <Product key = {product.id} 
+                                                                      product = {product}
+                                                                      user = {user}
+                                                                      productsInTheCart = {productsInTheCart}
+                                                                      setProductsInTheCart = {setProductsInTheCart} />)}
+                        </div>
+                    )
+                }
+                
             </div>
         </div>
     );

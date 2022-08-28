@@ -42,11 +42,26 @@ function DetailedProduct() {
         return <div className = "flex-grow"></div>;
 
     return (
-        <div className = "flex-grow">
-            <img src = {product.image} alt = "product img" width = "100px" height = "100px" />
-            <h3>{product.title}</h3>
-            <div>Price: <span>$ {product.price}</span></div>
-            <button onClick = {handleCartClick}>{inTheCart ? "Remove from the cart" : "Add to the cart"}</button>
+        <div className = "flex-grow flex justify-center py-8 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+            <div className = "flex flex-col gap-y-2 p-4 min-w-[280px] w-1/2 rounded-lg bg-white shadow-sm shadow-gray-300 h-min">
+                <div className = "self-center h-56 w-56 bg-white p-4">
+                    <img src = {product.image} alt = "product img" className = "h-full w-full object-contain" />
+                </div>
+
+                <h3 className = "font-medium">
+                    {product.title}
+                </h3>
+
+                <div>{product.description}</div>
+
+                <div className = "font-medium text-lg text-purple-700">
+                    $ {product.price}
+                </div>
+
+                <button onClick = {handleCartClick} className = {`w-full ${inTheCart ? "p-2 border border-purple-700 bg-white text-purple-700 font-medium rounded-md hover:bg-gray-200 active:bg-gray-300" : "btn"}`}>
+                    {inTheCart ? "Remove from the cart" : "Add to the cart"}
+                </button>
+            </div>
         </div>
     );
 };
