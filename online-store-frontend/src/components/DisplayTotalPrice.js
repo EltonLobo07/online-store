@@ -5,7 +5,11 @@ const DisplayTotalPrice = React.forwardRef(({ initialTotalPrice }, ref) => {
 
     useImperativeHandle(ref, () => ({totalPrice, setTotalPrice}));
 
-    return <div>Total price: ${totalPrice.toFixed(2)}</div>;
+    return (
+        <div className = "text-lg text-purple-700 font-medium">
+            Total price: ${totalPrice.toFixed(2)}
+        </div>
+    );
 });
 
 export default DisplayTotalPrice;
