@@ -46,7 +46,7 @@ function SignUp() {
                         <label htmlFor = "address" className = "text-purple-700 font-medium">
                             Address
                         </label>
-                        <textarea id = "address" placeholder = "Your address" value = {address} onChange = {e => setAddress(e.target.value)} rows = "5" className = "bg-gray-100 p-2 border border-white outline-none focus:border-purple-700 rounded-md w-40 sm:w-60 md:w-80"></textarea>
+                        <textarea id = "address" placeholder = "Your address" value = {address} onChange = {e => setAddress(e.target.value)} rows = "5" className = "bg-gray-100 p-2 border border-white min-h-[100px] outline-none focus:border-purple-700 rounded-md w-40 sm:w-60 md:w-80"></textarea>
                     </div>
 
                     <button className = "btn">Sign up</button>
