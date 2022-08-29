@@ -6,6 +6,7 @@ module.exports = {
     entry: "./src/index.js",
     output: {
         filename: "main.js",
+        assetModuleFilename: "[name][ext]",
         path: path.resolve(__dirname, "public")
     },
     plugins: [new MiniCssExtractPlugin()],
@@ -21,7 +22,11 @@ module.exports = {
             {
 		        test: /\.css$/i,
 		        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"]
-		    }
+		    },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource'
+            }
         ]
     },
     devServer: {

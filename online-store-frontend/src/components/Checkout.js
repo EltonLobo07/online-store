@@ -58,8 +58,15 @@ function Checkout() {
 
     if (productsToBuy.length === 0) // User is logged in
         return (
-            <div className = "flex-grow">
-                No products in the cart
+            <div className = "flex-grow flex flex-col">
+                <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
+                    {user ? `Hi ${user.name}, ` : null}
+                    {`Cart : ${productsToBuy.length}`}
+                </div>
+
+                <div className = "flex-grow flex flex-col items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+                    No products in the cart
+                </div>
             </div>
         );
 
