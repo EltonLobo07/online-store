@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/users";
+import DisplayError from "./DisplayError";
 import Input from "./Input";
 
 function SignUp() {
@@ -8,6 +9,7 @@ function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [address, setAddress] = useState("");
+    const ref = useRef(null);
 
     const navigate = useNavigate();
 
@@ -17,11 +19,10 @@ function SignUp() {
         try {
             await userService.createUser({name: Name, email, password, address});
      
-            alert("User created");
             navigate("/login");
         }
         catch (err) {
-            alert(err?.response?.data?.error || err.message);
+            ref.current(err?.response?.data?.error || err.message);
         }
 
         setEmail("");
@@ -32,6 +33,8 @@ function SignUp() {
 
     return (
         <div className = "bg-gray-50 flex flex-col justify-center items-center gap-y-28 py-12">
+            <DisplayError ref = {ref} />
+
             <div className = "flex flex-col gap-y-10">
                 <h1 className = "text-center text-3xl font-semibold text-purple-700">Sign Up</h1>
 

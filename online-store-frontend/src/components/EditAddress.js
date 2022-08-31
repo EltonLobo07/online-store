@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import userService from "../services/users";
 
-function EditAddress({ user }) {
+function EditAddress({ user, displayErr }) {
     const [address, setAddress] = useState("");
     const [editAddress, setEditAddress] = useState(false);
 
@@ -12,7 +12,7 @@ function EditAddress({ user }) {
                 await userService.setAddress(user.token, user.id, address);
             }
             catch (err) {
-                alert(err?.response?.data?.error || err.message);
+                displayErr(err?.response?.data?.error || err.message);
             }
         }
 
@@ -23,7 +23,7 @@ function EditAddress({ user }) {
         if (user) {
             userService.getAddress(user.token, user.id)
                        .then(address => setAddress(address))
-                       .catch(err => alert(err?.response?.data?.error || err.message));
+                       .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
     }, [user]);
 
@@ -39,7 +39,8 @@ function EditAddress({ user }) {
 };
 
 EditAddress.propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    displayErr: PropTypes.func.isRequired
 };
 
 export default EditAddress;

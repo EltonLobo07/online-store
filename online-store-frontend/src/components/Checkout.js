@@ -14,18 +14,18 @@ function resetGlobals() {
 
 function Checkout() {
     const [productsToBuy, setProductsToBuy] = useState([]);
-    const [user] = useOutletContext();
+    const [user, _, displayErr] = useOutletContext();
     const ref = useRef(null);
     navigateFunc = useNavigate();
 
     async function handleClick() {
         try {
             await orderService.order(user.token, user.id);
-            alert("Order successful!");
+            displayErr("Order successful!", false);
             setProductsToBuy([]);
         }
         catch(err) {
-            alert(err?.response?.data?.error || err.message);
+            displayErr(err?.response?.data?.error || err.message);
         }
     };
 
@@ -44,7 +44,7 @@ function Checkout() {
 
                             setProductsToBuy(tmpCheckoutProducts);
                         })
-                       .catch(err => alert(err?.response?.data?.error || err.message));
+                       .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
         else if (user === undefined)
             navigateFunc("/login", {replace: true});
@@ -64,7 +64,7 @@ function Checkout() {
                     {`Cart : ${productsToBuy.length}`}
                 </div>
 
-                <div className = "flex-grow flex flex-col items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+                <div className = "text-purple-700 flex-grow flex flex-col items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
                     No products in the cart
                 </div>
             </div>
@@ -83,11 +83,12 @@ function Checkout() {
                                                                    user = {user} 
                                                                    productsToBuy = {productsToBuy}
                                                                    setProductsToBuy = {setProductsToBuy} 
-                                                                   totalPriceObj = {ref} ></ShoppingCartProduct>)}
+                                                                   totalPriceObj = {ref}
+                                                                   displayErr = {displayErr} ></ShoppingCartProduct>)}
 
                 <DisplayTotalPrice initialTotalPrice = {initialTotalPrice} ref = {ref} />
 
-                <EditAddress user = {user} />
+                <EditAddress user = {user} displayErr = {displayErr} />
 
                 <button onClick = {handleClick} className = "btn">
                     Order

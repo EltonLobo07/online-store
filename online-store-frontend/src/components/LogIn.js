@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import loginService from "../services/login";
+import DisplayError from "./DisplayError";
 import Input from "./Input";
 
 function LogIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const ref = useRef(null);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -17,7 +19,7 @@ function LogIn() {
             navigate("/");
         }
         catch (err) {
-            alert(err?.response?.data?.error || err.message);
+            ref.current(err?.response?.data?.error || err.message);
         }
 
         setEmail("");
@@ -26,6 +28,8 @@ function LogIn() {
 
     return (
         <div className = "bg-gray-50 flex flex-col justify-center items-center gap-y-28 py-12">
+            <DisplayError ref = {ref} />
+
             <div className = "flex flex-col gap-y-10">
                 <h1 className = "text-center text-3xl font-semibold text-purple-700">Login</h1>
 

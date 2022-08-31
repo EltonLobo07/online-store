@@ -51,7 +51,7 @@ const INITIAL_CUR_CATEGORY_STATE = "all";
 
 function Products() {
     const [products, setProducts] = useState([]);
-    const [user] = useOutletContext();
+    const [user, _, displayErr] = useOutletContext();
     const [productsInTheCart, setProductsInTheCart] = useState({});
 
     const [curCategory, setCurCategory] = useState(INITIAL_CUR_CATEGORY_STATE);
@@ -89,18 +89,18 @@ function Products() {
                         setMaxPrice(Math.ceil(products.reduce((prev, product) => Math.max(prev, product.price), 0)));
                         setProducts(products);
                       })
-                      .catch(err => alert(err?.response?.data?.error || err.message));
+                      .catch(err => displayErr(err?.response?.data?.error || err.message));
 
         if (user)
         {
             userService.getShoppingCartProducts(user.id, user.token)
                        .then(shoppingCartProducts => setProductsInTheCart(shoppingCartProducts))
-                       .catch(err => alert(err?.response?.data?.error || err.message));
+                       .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
 
         categoryService.getAllCategories()
                        .then(returnedCategories => setCategories(returnedCategories))
-                       .catch(err => alert(err?.response?.data?.error || err.message));
+                       .catch(err => displayErr(err?.response?.data?.error || err.message));
     }, [user]);
 
     let filteredProducts = myFilter(products, curCategory, searchKeyword, minPrice, maxPrice);
@@ -174,7 +174,8 @@ function Products() {
                                                                       product = {product}
                                                                       user = {user}
                                                                       productsInTheCart = {productsInTheCart}
-                                                                      setProductsInTheCart = {setProductsInTheCart} />)}
+                                                                      setProductsInTheCart = {setProductsInTheCart}
+                                                                      displayErr = {displayErr} />)}
                         </div>
                     )
                 }

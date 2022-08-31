@@ -8,7 +8,7 @@ function toggleInputAndFocus(e) {
     e.target.focus();
 };
 
-function ShoppingCartProduct({ product, user, productsToBuy, setProductsToBuy, totalPriceObj}) {
+function ShoppingCartProduct({ product, user, productsToBuy, setProductsToBuy, totalPriceObj, displayErr }) {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
 
@@ -33,7 +33,7 @@ function ShoppingCartProduct({ product, user, productsToBuy, setProductsToBuy, t
                 toggleInputAndFocus(e);
         }
         catch (err) {
-            alert(err?.response?.data?.error || err.message);
+            displayErr(err?.response?.data?.error || err.message);
         }
     };
 
@@ -47,7 +47,7 @@ function ShoppingCartProduct({ product, user, productsToBuy, setProductsToBuy, t
                     totalPriceObj.current.setTotalPrice(totalPriceObj.current.totalPrice + (returnedQuantity - quantity) * product.price);
                     setQuantity(returnedQuantity);
                    })
-                   .catch(err => alert(err?.response?.data?.error || err.message));
+                   .catch(err => displayErr(err?.response?.data?.error || err.message));
     }, []);
 
     return (
@@ -89,7 +89,8 @@ ShoppingCartProduct.propTypes = {
     user: PropTypes.object,
     productsToBuy: PropTypes.array.isRequired,
     setProductsToBuy: PropTypes.func.isRequired,
-    totalPriceObj: PropTypes.object.isRequired
+    totalPriceObj: PropTypes.object.isRequired,
+    displayErr: PropTypes.func.isRequired
 };
 
 export default ShoppingCartProduct;

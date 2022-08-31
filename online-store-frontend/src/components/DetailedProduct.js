@@ -7,7 +7,7 @@ import userService from "../services/users";
 function DetailedProduct() {
     const [product, setProduct] = useState(null);
     const [inTheCart, setInTheCart] = useState(false);
-    const [user] = useOutletContext();
+    const [user, _, displayErr] = useOutletContext();
     const { id } = useParams();
 
     async function handleCartClick() {
@@ -21,7 +21,7 @@ function DetailedProduct() {
                 setInTheCart(!inTheCart);
             }
             catch(err) {
-                alert(err?.response?.data?.error || err.message);
+                displayErr(err?.response?.data?.error || err.message);
             }
         }
     };
@@ -29,12 +29,12 @@ function DetailedProduct() {
     useEffect(() => {
         productService.getOneProduct(id)
                       .then(product => setProduct(product))
-                      .catch(err => alert(err?.response?.data?.error || err.message));
+                      .catch(err => displayErr(err?.response?.data?.error || err.message));
 
         if (user) {
             userService.isProductPresentInTheCart(user.token, user.id, id)
                           .then(inTheCart => setInTheCart(inTheCart))
-                          .catch(err => alert(err?.response?.data?.error || err.message));
+                          .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
     }, [user, id]);
 

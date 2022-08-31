@@ -6,7 +6,7 @@ import Order from "./Order";
 let navigateFunc;
 
 function Orders() {
-    const [user] = useOutletContext();
+    const [user, _, displayErr] = useOutletContext();
     const [orders, setOrders] = useState([]);
     
     navigateFunc = useNavigate();
@@ -16,7 +16,7 @@ function Orders() {
         {
             orderService.getUserOrders(user.token)
                         .then(orders => setOrders(orders))
-                        .catch(err => alert(err?.response?.data?.error || err.message));
+                        .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
         else if (user === undefined)
             navigateFunc("/login", {replace: true});

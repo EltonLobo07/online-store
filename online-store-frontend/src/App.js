@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import DisplayError from "./components/DisplayError";
 
 function App() {
     const [user, setUser] = useState(window.localStorage.getItem("user") ? null : undefined);
+    const ref = useRef(null);
 
     useEffect(() => {
         if (window.localStorage.getItem("user"))
@@ -15,7 +17,10 @@ function App() {
         <div className = "h-full flex flex-col">
             <Header user = {user} setUser = {setUser} />
             <div className = "h-12 w-full shrink-0"></div>
-            <Outlet context = {[user, setUser]} />
+
+            <DisplayError ref = {ref} />
+
+            <Outlet context = {[user, setUser, ref.current]} />
             <Footer />
         </div>
     );
