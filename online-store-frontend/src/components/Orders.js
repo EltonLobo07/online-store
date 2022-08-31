@@ -28,15 +28,19 @@ function Orders() {
     if (orders.length === 0) // User is logged in
         return (
             <div className = "flex-grow">
-                <div>
+                <div className = "text-purple-700 flex justify-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
                     No orders
                 </div>
-            </div>
+            </div>  
         );
 
     return (
-        <div className = "flex-grow">
-            <div>
+        <div className = "flex-grow bg-gray-50 flex flex-col">
+            <div className = "font-medium text-xl text-purple-700 text-center pt-10">
+                Your orders
+            </div>
+
+            <div className = "flex flex-col gap-y-5 items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5">
                 {orders.map((order, orderNum) => <Order key = {order.id} order = {order} orderNum = {orderNum} />)}
             </div>
         </div>

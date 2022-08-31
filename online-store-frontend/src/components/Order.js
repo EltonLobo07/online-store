@@ -10,38 +10,50 @@ function Order({ order, orderNum }) {
     const dateObj = new Date(order.date);
 
     return (
-        <div>
-            <div>Order Id: {order.id}</div>
-
-            <div>
-                <div className = "table-container">
-                    <table>
-                        <caption>List of products of the current order</caption>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th colSpan={2}>Total price</th>
-                                <td>{calcTotalPrice(order.products).toFixed(2)}</td>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {order.products.map(product => <OrderProduct key = {product.id + orderNum} product = {product} />)}
-                        </tbody>
-                    </table>
+        <div className = "flex flex-col gap-y-2 rounded-lg shadow-lg shadow-gray-400 p-4 bg-white">
+            <div className = "p-4 rounded-lg flex flex-col gap-y-2 items-center">
+                <div className = "font-medium text-lg">
+                    Id:
+                    <span className = "text-purple-700">
+                        {" "}{order.id}
+                    </span>
                 </div>
+
+                <table className = "border-t border-r border-l border-black">
+                    <caption>Products purchased</caption>
+
+                    <thead className = "border-b border-black">
+                        <tr>
+                            <th className = "text-center p-2">Product</th>
+                            <th className = "text-center p-2">Quantity</th>
+                            <th className = "text-center p-2">Price</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {order.products.map(product => <OrderProduct key = {product.product.id + orderNum} product = {product} />)}
+                    </tbody>
+                </table>
             </div>      
 
-            <div>Date: {dateObj.toDateString()}</div>
+            <div>
+                <span className = "font-medium text-lg">Date:</span> {dateObj.toDateString()}
+            </div>
 
-            <div>Time: {dateObj.toTimeString()}</div>
+            <div>
+                <span className = "font-medium text-lg">Time:</span> {dateObj.toTimeString()}
+            </div>
 
-            <div>Address: {order.address}</div>
+            <div>
+                <span className = "font-medium text-lg">Address:</span> {order.address}
+            </div>
+
+            <div className = "self-end font-medium text-lg">
+                Total:
+                <span className = "text-purple-700">
+                    {" $"}{calcTotalPrice(order.products).toFixed(2)}
+                </span>
+            </div>
         </div>
     );
 };

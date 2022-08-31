@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: [require("@tailwindcss/line-clamp")],
   content: ['./src/**/*.{html,js}'],
   theme: {
     extend: {
@@ -12,6 +13,5 @@ module.exports = {
     extend: {
     
     }
-  },
-  plugins: [],
+  }
 }

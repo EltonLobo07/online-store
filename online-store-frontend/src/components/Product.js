@@ -37,10 +37,6 @@ function Product({ user, product, productsInTheCart, setProductsInTheCart, Displ
             navigate(product.id);
     };
 
-    /*
-        <button onClick = {handleMoreDetailsClick}>More details</button>
-    */
-
     return (
         <div onClick = {handleCardClick} className = "bg-white rounded-lg shadow-sm shadow-gray-400 hover:shadow-lg hover:shadow-gray-600 p-4 cursor-pointer">
             <div className = "h-1/2 border-b-2 border-gray-300 p-1 mb-1">
