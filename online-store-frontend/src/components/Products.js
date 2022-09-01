@@ -114,14 +114,14 @@ function Products() {
                 {`Cart : ${productsInTheCart.size}`}
             </div>
 
-            <div className = "flex flex-col gap-y-10 p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+            <div className = "flex flex-col gap-y-10 p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-100 rounded-lg">
                 <div className = "bg-white flex flex-col gap-y-2 py-4 items-center rounded-lg shadow-sm shadow-gray-300">
                     <div className = "flex flex-col gap-y-1">
                         <label htmlFor = "keywordSearch" className = "text-purple-700">
                             Keyword search 
                         </label>
 
-                        <input id = "keywordSearch" type = "text" placeholder = "any keyword" value = {searchKeyword} onChange = {handleSearchKeywordChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                        <input id = "keywordSearch" type = "text" placeholder = "any keyword" value = {searchKeyword} onChange = {handleSearchKeywordChange} className = "bg-gray-100 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                     </div>
                     
                     <div className = "flex flex-col gap-y-1 org-sm:flex-row org-sm:gap-x-4">
@@ -130,7 +130,7 @@ function Products() {
                                 Sort by price
                             </label>
 
-                            <select id = "sortByPrice" onChange = {handleSortByPriceChange} className = "bg-gray-200 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60">
+                            <select id = "sortByPrice" onChange = {handleSortByPriceChange} className = "bg-gray-100 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60">
                                 <option value = {INITIAL_SORT_BY_PRICE_STATE}>{INITIAL_SORT_BY_PRICE_STATE}</option>
                                 <option value = "increasing">increasing</option>
                                 <option value = "decreasing">decreasing</option>
@@ -142,7 +142,7 @@ function Products() {
                                 Category
                             </label>
 
-                            <select id = "category" onChange = {handleCategoryChange} className = "bg-gray-200 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60">
+                            <select id = "category" onChange = {handleCategoryChange} className = "bg-gray-100 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60">
                                 <option value = {INITIAL_CUR_CATEGORY_STATE}>{INITIAL_CUR_CATEGORY_STATE}</option>
                                 {categories.map(category => <option key = {category.id} value = {category.name}>{category.name}</option>)}
                             </select>
@@ -155,7 +155,7 @@ function Products() {
                                 Minimum price
                             </label>
 
-                            <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                            <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} className = "bg-gray-100 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                         </div>
 
                         <div className = "flex flex-col gap-y-1">
@@ -163,7 +163,7 @@ function Products() {
                                 Maximum price
                             </label>
 
-                            <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                            <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} className = "bg-gray-100 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                         </div>
                     </div>
                 </div>
