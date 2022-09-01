@@ -4,25 +4,24 @@ import { useOutletContext } from "react-router-dom";
 import productService from "../services/products";
 import userService from "../services/users";
 import categoryService from "../services/categories";
-import Input from "./Input";
 
 function myFilter(products, category, keywordSearch, minPrice, maxPrice) {
     const lCSearchKeyword = keywordSearch.toLowerCase();
+
     return products.filter(product => {
-        let res = true;
+        // Category doesn't match check
+        if (category !== INITIAL_CUR_CATEGORY_STATE && product.category.name !== category)
+            return false;
 
-        const curProductCategoryName = product.category.name;
+        // keyword doesn't match check
+        if (!product.title.toLowerCase().includes(lCSearchKeyword))
+            return false;
 
-        if (category !== INITIAL_CUR_CATEGORY_STATE && curProductCategoryName !== category)
-            res = false;
+        // price boundary not respected check
+        if (product.price < minPrice || product.price > maxPrice)
+            return false;
 
-        if (res && !product.title.toLowerCase().includes(lCSearchKeyword))
-            res = false;
-
-        if (res && (product.price < minPrice || product.price > maxPrice))
-            res = false;
-
-        return res;
+        return true;
     });
 };
 
@@ -52,7 +51,7 @@ const INITIAL_CUR_CATEGORY_STATE = "all";
 function Products() {
     const [products, setProducts] = useState([]);
     const [user, _, displayErr] = useOutletContext();
-    const [productsInTheCart, setProductsInTheCart] = useState({});
+    const [productsInTheCart, setProductsInTheCart] = useState(new Set()); // useState({})
 
     const [curCategory, setCurCategory] = useState(INITIAL_CUR_CATEGORY_STATE);
     const [categories, setCategories] = useState([]);
@@ -75,32 +74,34 @@ function Products() {
 
     function handleMinPriceChange(e) {
         const currentValue = Number(e.target.value);
-        setMinPrice(isNaN(currentValue) ? "" : currentValue);
+        setMinPrice(isFinite(currentValue) ? currentValue : 0);
     };
 
     function handleMaxPriceChange(e) {
         const currentValue = Number(e.target.value);
-        setMaxPrice(isNaN(currentValue) ? "" : currentValue);
+        setMaxPrice(isFinite(currentValue) ? currentValue : 0);
     };
 
     useEffect(() => {
-        productService.getAllProducts()
-                      .then(products => {
-                        setMaxPrice(Math.ceil(products.reduce((prev, product) => Math.max(prev, product.price), 0)));
-                        setProducts(products);
-                      })
-                      .catch(err => displayErr(err?.response?.data?.error || err.message));
+        const getAllProductsPromise = productService.getAllProducts();
+        const getAllCategoriesPromise = categoryService.getAllCategories();
 
+        Promise.all([getAllProductsPromise, getAllCategoriesPromise])
+               .then(([ products, categories ]) => {
+                    setMaxPrice(Math.ceil(products.reduce((prev, product) => Math.max(prev, product.price), 0)));
+                    setProducts(products);
+                    setCategories(categories);
+               })
+               .catch(err => displayErr(err?.response?.data?.error || err.message));
+    }, []);
+
+    useEffect(() => {
         if (user)
         {
             userService.getShoppingCartProducts(user.id, user.token)
-                       .then(shoppingCartProducts => setProductsInTheCart(shoppingCartProducts))
+                       .then(shoppingCartProducts => setProductsInTheCart(new Set(Object.keys(shoppingCartProducts))))
                        .catch(err => displayErr(err?.response?.data?.error || err.message));
         }
-
-        categoryService.getAllCategories()
-                       .then(returnedCategories => setCategories(returnedCategories))
-                       .catch(err => displayErr(err?.response?.data?.error || err.message));
     }, [user]);
 
     let filteredProducts = myFilter(products, curCategory, searchKeyword, minPrice, maxPrice);
@@ -110,7 +111,7 @@ function Products() {
         <div className = "flex-grow flex flex-col">
             <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
                 {user ? `Hi ${user.name}, ` : null}
-                {`Cart : ${Object.keys(productsInTheCart).length}`}
+                {`Cart : ${productsInTheCart.size}`}
             </div>
 
             <div className = "flex flex-col gap-y-10 p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
@@ -120,7 +121,7 @@ function Products() {
                             Keyword search 
                         </label>
 
-                        <input id = "keywordSearch" type = "text" placeholder = "any keyword" value = {searchKeyword} onChange = {handleSearchKeywordChange} className = "bg-gray-200 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                        <input id = "keywordSearch" type = "text" placeholder = "any keyword" value = {searchKeyword} onChange = {handleSearchKeywordChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                     </div>
                     
                     <div className = "flex flex-col gap-y-1 org-sm:flex-row org-sm:gap-x-4">
@@ -154,7 +155,7 @@ function Products() {
                                 Minimum price
                             </label>
 
-                            <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} className = "bg-gray-200 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                            <input type="text" id = "minPrice" value = {minPrice} onChange = {handleMinPriceChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                         </div>
 
                         <div className = "flex flex-col gap-y-1">
@@ -162,7 +163,7 @@ function Products() {
                                 Maximum price
                             </label>
 
-                            <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} className = "bg-gray-200 p-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
+                            <input type="text" id = "maxPrice" value = {maxPrice} onChange = {handleMaxPriceChange} className = "bg-gray-200 px-2 py-1 border border-white outline-none focus:border-purple-700 rounded-sm w-40 org-sm:w-50 md:w-60" />
                         </div>
                     </div>
                 </div>
