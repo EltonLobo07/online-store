@@ -110,7 +110,7 @@ function Products() {
     return (
         <div className = "flex-grow flex flex-col">
             <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
-                {user ? `Hi ${user.name}, ` : null}
+                {user ? `Hi ${user.name.length > 16 ? user.name.slice(0, 16) + "..." : user.name}, ` : null}
                 {`Cart : ${productsInTheCart.size}`}
             </div>
 

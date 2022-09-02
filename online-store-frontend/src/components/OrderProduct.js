@@ -6,7 +6,7 @@ function OrderProduct({ product }) {
     const navigate = useNavigate();
 
     return (
-        <tr onClick = {() => navigate(`/products/${product.product.id}`)} className = "hover:bg-gray-50 cursor-pointer border-b border-black">
+        <tr onClick = {() => navigate(`/products/${product.product.id}`)} className = "hover:bg-gray-100 cursor-pointer border-b border-black">
             <td className = " p-2 text-center line-clamp-3">
                 {product.product.title}
             </td>
@@ -16,7 +16,7 @@ function OrderProduct({ product }) {
             </td>
 
             <td className = " p-2 text-center text-purple-700 font-medium">
-                ${product.product.price}
+                ${(product.quantity * product.product.price).toFixed(2)}
             </td>
         </tr>
     );

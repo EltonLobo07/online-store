@@ -1,24 +1,17 @@
 import React from "react";
-import homePageImg from "../images/online-store-home.jpg";
 
 function Home() {
     return (
         <div className = "flex-grow flex flex-col">
-            <div className = "flex bg-gradient-to-b from-purple-700 to-purple-400 h-3/4">
-                <div className = "flex-grow basis-1/2 flex flex-col gap-y-4 items-center justify-center text-white text-center bg-[url('./images/online-store-home.jpg')] md:bg-none">
-                    <div className = "text-4xl font-extrabold">
-                        BEST ONLINE STORE
-                    </div>
-                    
-                    <div className = "text-4xl font-bold">
-                        Find it, <br />
-                        Love it, <br />
-                        Buy it.
-                    </div>
+            <div className = "bg-gradient-to-b from-purple-700 to-purple-400 h-3/4 flex flex-col justify-center items-center text-white gap-y-4 text-center">
+                <div className = "text-4xl font-extrabold">
+                    BEST ONLINE STORE
                 </div>
-
-                <div className = "flex-grow basis-1/2 hidden md:flex items-center">
-                    <img src = {homePageImg} alt = "home page image" className = "w-3/4 h-3/4 object-cover object-center rounded-xl" />
+                
+                <div className = "text-4xl font-bold">
+                    Find it, <br />
+                    Love it, <br />
+                    Buy it.
                 </div>
             </div>
 

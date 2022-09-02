@@ -61,11 +61,11 @@ function Checkout() {
         return (
             <div className = "flex-grow flex flex-col">
                 <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
-                    {user ? `Hi ${user.name}, ` : null}
+                    {user ? `Hi ${user.name.length > 16 ? user.name.slice(0, 16) + "..." : user.name}, ` : null}
                     {`Cart : ${productsToBuy.length}`}
                 </div>
 
-                <div className = "text-purple-700 flex-grow flex flex-col items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-100 rounded-lg">
+                <div className = "text-purple-700 font-medium text-xl flex-grow flex flex-col items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-100 rounded-lg">
                     No products in the cart
                 </div>
             </div>
@@ -74,7 +74,7 @@ function Checkout() {
     return (
         <div className = "flex-grow flex flex-col">
             <div className = "sticky top-12 bg-purple-400 py-1 text-center text-white min-w-[300px]">
-                {user ? `Hi ${user.name}, ` : null}
+                {user ? `Hi ${user.name.length > 16 ? user.name.slice(0, 16) + "..." : user.name}, ` : null}
                 {`Cart : ${productsToBuy.length}`}
             </div>
 

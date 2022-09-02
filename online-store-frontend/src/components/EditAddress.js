@@ -8,8 +8,6 @@ function EditAddress({ user, displayErr }) {
     const ref = useRef(null);
 
     async function handleClick(e) {
-        ref.current.disabled = editAddress;
-
         if (editAddress) {
             try {
                 await userService.setAddress(user.token, user.id, address);
@@ -18,8 +16,10 @@ function EditAddress({ user, displayErr }) {
                 displayErr(err?.response?.data?.error || err.message);
             }
         }
-        else 
+        else {
+            ref.current.disabled = false;
             ref.current.focus();
+        }
 
         setEditAddress(!editAddress);
     };
@@ -38,7 +38,7 @@ function EditAddress({ user, displayErr }) {
                 {editAddress ? "Save " : "Edit "} address
             </button>
 
-            <textarea value = {address} onChange = {e => setAddress(e.target.value)} rows = "5" className = {`${!editAddress ? "bg-gray-50 border-gray-50" : "bg-white border-white"} p-2 min-h-[100px] border outline-none focus:border-purple-700 rounded-md w-52 sm:w-60 md:w-80`} ref = {ref}></textarea>
+            <textarea disabled = {!editAddress} value = {address} onChange = {e => setAddress(e.target.value)} rows = "5" className = {`${!editAddress ? "bg-gray-50 border-gray-50" : "bg-white border-white"} p-2 min-h-[100px] border outline-none focus:border-purple-700 rounded-md w-52 sm:w-60 md:w-80`} ref = {ref}></textarea>
         </div>
     );
 };

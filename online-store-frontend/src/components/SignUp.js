@@ -38,12 +38,12 @@ function SignUp() {
             <div className = "flex flex-col gap-y-10">
                 <h1 className = "text-center text-3xl font-semibold text-purple-700">Sign Up</h1>
 
-                <form onSubmit = {handleSubmit} className = "border p-8 sm:p-16 flex flex-col gap-y-4 bg-white rounded-lg shadow-xl shadow-gray-300">
-                    <Input inputId = "name" inputLabel = "Full name" isRequired = {true} type = "text" placeholder = "Your full name" value = {Name} onChange = {e => setName(e.target.value)} />
+                <form onSubmit = {handleSubmit} className = "border p-8 sm:p-16 flex flex-col gap-y-5 bg-white rounded-lg shadow-xl shadow-gray-300">
+                    <Input inputId = "name" inputLabel = "Full name" isRequired = {true} type = "text" placeholder = "Your full name" value = {Name} onChange = {e => setName(e.target.value)} optionalText = "Should be at least 5 characters long" />
 
                     <Input inputId = "emailAddress" inputLabel = "Email" isRequired = {true} type = "text" placeholder = "Your email address" value = {email} onChange = {e => setEmail(e.target.value)} />
 
-                    <Input inputId = "password" inputLabel = "Password" isRequired = {true} type = "password" placeholder = "Your password" value = {password} onChange = {e => setPassword(e.target.value)} />
+                    <Input inputId = "password" inputLabel = "Password" isRequired = {true} type = "password" placeholder = "Your password" value = {password} onChange = {e => setPassword(e.target.value)} optionalText = "Should be at least 5 characters long" />
 
                     <div className = "flex flex-col gap-y-1">
                         <label htmlFor = "address" className = "text-purple-700 font-medium">

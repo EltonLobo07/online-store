@@ -23,12 +23,12 @@ function Orders() {
     }, [user]);
 
     if (user === undefined) // User is not logged in
-        return <div className = "flex-grow"></div>;
+        return <div className = "flex-grow bg-gray-50"></div>;
 
     if (orders.length === 0) // User is logged in
         return (
-            <div className = "flex-grow">
-                <div className = "text-purple-700 flex justify-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5 bg-gray-200 rounded-lg">
+            <div className = "flex-grow bg-gray-50">
+                <div className = "font-medium text-xl text-purple-700 text-center pt-10">
                     No orders
                 </div>
             </div>  
@@ -40,8 +40,8 @@ function Orders() {
                 Your orders
             </div>
 
-            <div className = "flex flex-col gap-y-5 items-center p-5 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5">
-                {orders.map((order, orderNum) => <Order key = {order.id} order = {order} orderNum = {orderNum} />)}
+            <div className = "flex flex-col items-stretch gap-y-5 p-5 md:px-16 w-3/4 min-w-[300px] max-w-screen-lg mx-auto my-5">
+                {orders.map((order, orderNum) => <Order key = {order.id} order = {order} orderNum = {orderNum} />).reverse()}
             </div>
         </div>
     );
