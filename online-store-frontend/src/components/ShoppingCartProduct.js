@@ -90,7 +90,7 @@ ShoppingCartProduct.propTypes = {
     setProductsToBuy: PropTypes.func.isRequired,
     totalPrice: PropTypes.number.isRequired,
     setTotalPrice: PropTypes.func.isRequired,
-    displayErr: PropTypes.func.isRequired
+    displayErr: PropTypes.func
 };
 
 export default ShoppingCartProduct;

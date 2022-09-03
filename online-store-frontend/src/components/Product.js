@@ -62,7 +62,7 @@ Product.propTypes = {
     user: PropTypes.object,
     productsInTheCart: PropTypes.object.isRequired,
     setProductsInTheCart: PropTypes.func.isRequired,
-    DisplayErr: PropTypes.func.isRequired
+    DisplayErr: PropTypes.func
 };
 
 export default Product;

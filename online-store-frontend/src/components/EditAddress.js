@@ -45,7 +45,7 @@ function EditAddress({ user, displayErr }) {
 
 EditAddress.propTypes = {
     user: PropTypes.object,
-    displayErr: PropTypes.func.isRequired
+    displayErr: PropTypes.func
 };
 
 export default EditAddress;
