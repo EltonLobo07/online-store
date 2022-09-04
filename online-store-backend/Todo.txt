@@ -1,1 +1,0 @@
-Checkout page is broken because of changes made to "/api/users/:userId/shoppingCartProducts" route
