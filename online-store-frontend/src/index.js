@@ -35,11 +35,11 @@ root.render(
                 <Route path = "checkout" element = {<Checkout />} />
 
                 <Route path = "your-orders" element = {<Orders />} />
-            </Route>
-            
-            <Route path = "login" element = {<LogIn />} />
 
-            <Route path = "signup" element = {<SignUp />} />
+                <Route path = "login" element = {<LogIn />} />
+
+                <Route path = "signup" element = {<SignUp />} /> 
+            </Route>
 
             <Route path = "*" element = {<UnknownPath />} />
         </Routes>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import userService from "./users";
 
+// const baseUrl = "http://localhost:3001/api/orders";
 const baseUrl = "/api/orders";
 
 async function order(token, userId) {

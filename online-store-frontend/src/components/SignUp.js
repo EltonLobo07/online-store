@@ -32,7 +32,7 @@ function SignUp() {
     };
 
     return (
-        <div className = "bg-gray-50 flex flex-col justify-center items-center gap-y-28 py-12">
+        <div className = "bg-gray-50 flex flex-col justify-center items-center gap-y-28 py-14">
             <DisplayError ref = {ref} />
 
             <div className = "flex flex-col gap-y-10">
