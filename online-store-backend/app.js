@@ -9,6 +9,7 @@ const { DB_URI } = require("./utils/config");
 const mongoose = require("mongoose");
 const { unknownEndpointHandler, errorHandler, requestLogger } = require("./utils/middlewares");
 const cors = require("cors");
+const path = require("path");
 
 // Connect to your DB here
 mongoose.connect(DB_URI)
@@ -19,11 +20,11 @@ const app = express();
 
 app.use(cors({origin: "*"}));
 
-app.use(express.static("public"));
-
 app.use(express.json()); // Sets request's body field to received JS object
 
 // app.use(requestLogger);
+
+app.use(express.static("public"));
 
 app.use("/api/users", userRouter);
 
@@ -34,6 +35,19 @@ app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 
 app.use("/api/categories", categoryRouter);
+
+// For react router routes to work properly (redirects all get requests to index.html)
+if (process.env.NODE_ENV === "production") {
+        app.get("*", (req, res) => {
+                res.sendFile(path.resolve(__dirname, "public", "index.html"));
+        });
+}
+
+/*
+app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "public", "index.html"));
+});
+*/
 
 app.use(unknownEndpointHandler);
 
